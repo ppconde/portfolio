@@ -8,22 +8,25 @@
 	"postAttachCommand": "npm run dev",
 	"shutdownAction": "stopContainer",
 	"portsAttributes": {
-	  "5173": {
-		"label": "Application",
-		"onAutoForward": "openBrowserOnce"
-	  }
+		"5173": {
+			"label": "Application",
+			"onAutoForward": "openBrowserOnce"
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 	"customizations": {
-	  "vscode": {
-		"extensions": [
-		  "streetsidesoftware.code-spell-checker",
-		  "dbaeumer.vscode-eslint",
-		  "esbenp.prettier-vscode",
-		  "DavidAnson.vscode-markdownlint",
-		  "ms-vscode-remote.remote-containers",
-		  "wix.vscode-import-cost",
-		  "ms-vscode.js-debug-nightly"
-		]
-	  }
+		"vscode": {
+			"extensions": [
+				"streetsidesoftware.code-spell-checker",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"DavidAnson.vscode-markdownlint",
+				"ms-vscode-remote.remote-containers",
+				"wix.vscode-import-cost",
+				"ms-vscode.js-debug-nightly"
+			]
+		}
 	}
 }
