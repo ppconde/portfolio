@@ -4,6 +4,7 @@
 	"name": "Node.js & TypeScript",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+	"postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
 	"updateContentCommand": "npm install",
 	"postAttachCommand": "npm run dev",
 	"shutdownAction": "stopContainer",
