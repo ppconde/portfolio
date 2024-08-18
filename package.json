@@ -11,7 +11,7 @@
   },
   "engines": {
     "npm": "^10.8.2",
-    "node": "^20.15.1"
+    "node": "^22.5.1"
   },
   "dependencies": {
     "react": "^18.3.1",
