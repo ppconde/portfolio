@@ -9,7 +9,3 @@ updates:
     target-branch: "develop"
     commit-message:
       prefix: "deps"
-    automerge: true
-    automerge-type: "pr"
-    reviewers:
-      - "ppconde"
