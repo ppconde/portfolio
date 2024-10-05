@@ -1,18 +1,25 @@
-import './App.css'
+import { Canvas } from "@react-three/fiber";
+import Experience from "./Experience";
+import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
 
-function App() {
+export default function App() {
   return (
-    <>
-      <h1>👋 Hello, I'm Pedro Conde</h1>
-      <p>This site is currently under construction.</p>
-      <p>In the meantime, feel free to reach out to me or follow me on social media:</p>
-
-      <div>
-        <a href="https://www.linkedin.com/in/ppconde/" target="_blank">LinkedIn</a><> | </>
-        <a href="https://github.com/ppconde/" target="_blank">GitHub</a>
-      </div>
-    </>
+    <div className="w-full h-full">
+      <Canvas
+        camera={{
+          fov: 45,
+          near: 0.1,
+          far: 200,
+          position: [3, 2, 6],
+        }}
+        gl={{
+          antialias: true,
+          toneMapping: ACESFilmicToneMapping,
+          outputColorSpace: SRGBColorSpace,
+        }}
+      >
+        <Experience />
+      </Canvas>
+    </div>
   )
 }
-
-export default App

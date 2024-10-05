@@ -26,7 +26,17 @@
 				"DavidAnson.vscode-markdownlint",
 				"ms-vscode-remote.remote-containers",
 				"wix.vscode-import-cost",
-				"ms-vscode.js-debug-nightly"
+				"ms-vscode.js-debug-nightly",
+				"GitHub.copilot-chat",
+				"GitHub.copilot",
+				"bradlc.vscode-tailwindcss",
+				"austenc.tailwind-docs",
+				"bourhaouta.tailwindshades",
+				"DrDesten.asi-glsl",
+				"github.vscode-github-actions",
+				"ms-vscode.vscode-typescript-next",
+				"slevesque.shader",
+				"raczzalan.webgl-glsl-editor"
 			]
 		}
 	}
