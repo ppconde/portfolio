@@ -15,7 +15,11 @@
 		}
 	},
 	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {}
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/joedmck/devcontainer-features/cloudflared:1": {},
+		"ghcr.io/joedmck/devcontainer-features/wrangler:1": {
+			"version": "latest"
+		}
 	},
 	"customizations": {
 		"vscode": {
