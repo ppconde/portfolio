@@ -1,10 +1,13 @@
 import { Canvas } from "@react-three/fiber";
-import Experience from "./Experience";
 import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
+import { Suspense } from "react";
+import { Experience } from "./Experience";
+import { Loader } from "./Loader";
+import { Html } from "@react-three/drei";
 
-export default function App() {
+export function App() {
   return (
-    <div className="w-full h-full">
+    <div className="h-screen w-screen absolute top-0 left-0">
       <Canvas
         camera={{
           fov: 45,
@@ -18,7 +21,23 @@ export default function App() {
           outputColorSpace: SRGBColorSpace,
         }}
       >
-        <Experience />
+        <Suspense fallback={<Loader />}>
+          <Html fullscreen>
+            <div className="flex justify-center items-center h-screen">
+              <div className="text-center">
+                <h1 className="text-6xl mb-4">👋 Hello, I'm Pedro Conde</h1>
+                <p className="text-lg mb-2">This site is currently under construction.</p>
+                <p className="text-lg mb-4">In the meantime, feel free to reach out to me or follow me on social media:</p>
+
+                <div className="text-lg text-center">
+                  <a className="text-blue-500 hover:underline" href="https://www.linkedin.com/in/ppconde/" target="_blank">LinkedIn</a><span> | </span>
+                  <a className="text-blue-500 hover:underline" href="https://github.com/ppconde/" target="_blank">GitHub</a>
+                </div>
+              </div>
+            </div>
+          </Html>
+          <Experience />
+        </Suspense>
       </Canvas>
     </div>
   )
