@@ -3,7 +3,6 @@ import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
 import { Suspense } from "react";
 import { Experience } from "./Experience";
 import { Loader } from "./Loader";
-import { Html } from "@react-three/drei";
 
 export function App() {
   return (
@@ -20,25 +19,24 @@ export function App() {
           toneMapping: ACESFilmicToneMapping,
           outputColorSpace: SRGBColorSpace,
         }}
+        shadows
       >
         <Suspense fallback={<Loader />}>
-          <Html fullscreen>
-            <div className="flex justify-center items-center h-screen">
-              <div className="text-center">
-                <h1 className="text-6xl mb-4">👋 Hello, I'm Pedro Conde</h1>
-                <p className="text-lg mb-2">This site is currently under construction.</p>
-                <p className="text-lg mb-4">In the meantime, feel free to reach out to me or follow me on social media:</p>
-
-                <div className="text-lg text-center">
-                  <a className="text-blue-500 hover:underline" href="https://www.linkedin.com/in/ppconde/" target="_blank">LinkedIn</a><span> | </span>
-                  <a className="text-blue-500 hover:underline" href="https://github.com/ppconde/" target="_blank">GitHub</a>
-                </div>
-              </div>
-            </div>
-          </Html>
           <Experience />
         </Suspense>
       </Canvas>
+      <div className="absolute top-0 flex justify-center items-center h-screen w-screen">
+        <div className="text-center">
+          <h1 className="text-6xl mb-4">👋 Hello, I'm Pedro Conde</h1>
+          <p className="text-lg mb-2">This site is currently under construction.</p>
+          <p className="text-lg mb-4">In the meantime, feel free to reach out to me or follow me on social media:</p>
+
+          <div className="text-lg text-center">
+            <a className="text-blue-500 hover:underline" href="https://www.linkedin.com/in/ppconde/" target="_blank">LinkedIn</a><span> | </span>
+            <a className="text-blue-500 hover:underline" href="https://github.com/ppconde/" target="_blank">GitHub</a>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
