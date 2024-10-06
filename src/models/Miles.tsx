@@ -7,10 +7,11 @@ Title: Fortnite-miles-morales
 */
 
 import * as THREE from 'three'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import { ENVIRONMENT } from '../constants/environment.const'
+import { useControls } from 'leva'
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -26,13 +27,23 @@ type GLTFResult = GLTF & {
     }
 }
 
-type ActionName = 'FearlessFlight_Male_idle'
-
 export function Miles(props: JSX.IntrinsicElements['group']) {
     const group = useRef<THREE.Group>(null)
 
     const { nodes, materials, animations } = useGLTF(`${ENVIRONMENT.workerBucketUrl}/models/miles.glb`) as GLTFResult
-    const { actions } = useAnimations(animations, group)
+    const { actions, names } = useAnimations(animations, group)
+
+    const { animationName } = useControls('Miles', {
+        animationName: { value: "FearlessFlight_Male_idle", options: names },
+    });
+
+    useEffect(() => {
+        actions[animationName]?.reset().fadeIn(0.5).play();
+
+        return () => {
+            actions[animationName]?.fadeOut(0.5);
+        };
+    }, [animationName]);
 
     return (
         <group ref={group} {...props} dispose={null}>
