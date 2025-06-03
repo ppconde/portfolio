@@ -1,24 +1,52 @@
-import { Suspense } from "react"
-import { DoubleSide } from "three"
+import { Suspense, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+import { DoubleSide } from "three";
+import { Computer } from "./models/Computer";
+import { Loader } from "./Loader";
+import { useControls } from "leva";
+import { Perf } from "r3f-perf";
 
-import { Loader } from "./Loader"
-import { Miles } from "./models/Miles"
-import { useControls } from "leva"
-import { Perf } from "r3f-perf"
+export function Experience({
+  onScreenPositionChange,
+}: {
+  onScreenPositionChange: (coords: { x: number; y: number }) => void;
+}) {
+  const pcRef = useRef<THREE.Group>(null);
+  const { camera, size } = useThree();
 
-export function Experience() {
-
-  const { positionX, positionY, positionZ, rotationX, rotationY, rotationZ } = useControls('Miles', {
-    positionX: { value: 2, min: -10, max: 10, step: 0.1 },
-    positionY: { value: -2, min: -10, max: 10, step: 0.1 },
-    positionZ: { value: 0, min: -10, max: 10, step: 0.1 },
+  const {
+    positionX: pcPositionX,
+    positionY: pcPositionY,
+    positionZ: pcPositionZ,
+    rotationX: pcRotationX,
+    rotationY: pcRotationY,
+    rotationZ: pcRotationZ,
+  } = useControls("Pc", {
+    positionX: { value: 2.7, min: -10, max: 10, step: 0.1 },
+    positionY: { value: 0.9, min: -10, max: 10, step: 0.1 },
+    positionZ: { value: 4.4, min: -10, max: 10, step: 0.1 },
     rotationX: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
-    rotationY: { value: -0.6, min: -Math.PI, max: Math.PI, step: 0.01 },
+    rotationY: { value: 0.5, min: -Math.PI, max: Math.PI, step: 0.01 },
     rotationZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
   });
 
+  const { perfVisible } = useControls("Perf", { perfVisible: false });
 
-  const { perfVisible } = useControls('Perf', { perfVisible: false });
+  // Update screen position each frame
+  useFrame(() => {
+    if (pcRef.current) {
+      const screenPos = new THREE.Vector3();
+      // Adjust to your screen's actual position within the mesh
+      pcRef.current.getWorldPosition(screenPos);
+      screenPos.project(camera);
+
+      const x = (screenPos.x * 0.5 + 0.5) * size.width;
+      const y = (1 - (screenPos.y * 0.5 + 0.5)) * size.height;
+
+      onScreenPositionChange({ x, y });
+    }
+  });
 
   return (
     <>
@@ -31,9 +59,10 @@ export function Experience() {
         shadow-normalBias={0.04}
       />
       <Suspense fallback={<Loader />}>
-        <Miles
-          position={[positionX, positionY, positionZ]}
-          rotation={[rotationX, rotationY, rotationZ]}
+        <Computer
+          ref={pcRef}
+          position={[pcPositionX, pcPositionY, pcPositionZ]}
+          rotation={[pcRotationX, pcRotationY, pcRotationZ]}
         />
       </Suspense>
       <mesh
@@ -43,8 +72,8 @@ export function Experience() {
         receiveShadow
       >
         <planeGeometry />
-        <meshStandardMaterial color={'#f7faff'} side={DoubleSide} />
+        <meshStandardMaterial color={"#f7faff"} side={DoubleSide} />
       </mesh>
     </>
-  )
+  );
 }
