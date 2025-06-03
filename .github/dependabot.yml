@@ -6,6 +6,6 @@ updates:
       interval: "weekly"
     assignees:
       - "ppconde"
-    target-branch: "develop"
+    target-branch: "main"
     commit-message:
       prefix: "deps"
