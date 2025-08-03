@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
+		"watch": "tsc --noEmit --watch",
 		"build": "tsc -b && vite build",
 		"lint": "exec biome check --write",
 		"preview": "vite preview"
