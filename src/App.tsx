@@ -1,9 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState } from "react";
 import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
+import styles from "./App.module.css";
 import { Experience } from "./Experience";
 import { Loader } from "./Loader";
-import styles from "./App.module.css";
 
 export function App() {
 	const [screenPos, setScreenPos] = useState({ x: -9999, y: -9999 });
