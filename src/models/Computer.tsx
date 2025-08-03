@@ -6,59 +6,44 @@ Source: https://sketchfab.com/3d-models/retro-computer-9439cb5e09cc44caa63dfbfb2
 Title: Retro computer
 */
 
-import { useGLTF } from "@react-three/drei";
-import { forwardRef } from "react";
-import * as THREE from "three";
-import type { GLTF } from "three-stdlib";
-import { ENVIRONMENT } from "../constants/environment.const";
+import * as THREE from 'three'
+import type { JSX } from 'react'
+import { useGLTF } from '@react-three/drei'
+import type { GLTF } from 'three-stdlib'
+import { ENVIRONMENT } from '../constants/environment.const'
 
 type GLTFResult = GLTF & {
-	nodes: {
-		Object_2: THREE.Mesh;
-		Object_3: THREE.Mesh;
-	};
-	materials: {
-		None: THREE.MeshStandardMaterial;
-	};
-};
+  nodes: {
+    Object_2: THREE.Mesh
+    Object_3: THREE.Mesh
+  }
+  materials: {
+    None: THREE.MeshStandardMaterial
+  }
+}
 
-export const Computer = forwardRef<THREE.Group, JSX.IntrinsicElements["group"]>((props, ref) => {
-	const { nodes } = useGLTF(`${ENVIRONMENT.workerBucketUrl}/models/pc.glb`) as GLTFResult;
+export function Computer(props: JSX.IntrinsicElements['group']) {
+  const { nodes, materials } = useGLTF(`${ENVIRONMENT.workerBucketUrl}/models/pc.glb`) as unknown as GLTFResult
+  return (
+    <group {...props} dispose={null}>
+      <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh
+          name="Object_2"
+          castShadow
+          receiveShadow
+          geometry={nodes.Object_2.geometry}
+          material={materials.None}
+        />
+        <mesh
+          name="Object_3"
+          castShadow
+          receiveShadow
+          geometry={nodes.Object_3.geometry}
+          material={materials.None}
+        />
+      </group>
+    </group>
+  )
+}
 
-	return (
-		<group ref={ref} {...props} dispose={null}>
-			<group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
-				<mesh
-					name="Object_2"
-					castShadow
-					receiveShadow
-					geometry={nodes.Object_2.geometry}
-					material={
-						new THREE.MeshStandardMaterial({
-							color: "grey",
-							side: THREE.DoubleSide,
-							transparent: true,
-							opacity: 1,
-						})
-					}
-				/>
-				<mesh
-					name="Object_3"
-					castShadow
-					receiveShadow
-					geometry={nodes.Object_3.geometry}
-					material={
-						new THREE.MeshStandardMaterial({
-							color: "slategrey",
-							side: THREE.DoubleSide,
-							transparent: true,
-							opacity: 1,
-						})
-					}
-				/>
-			</group>
-		</group>
-	);
-});
-
-useGLTF.preload(`${ENVIRONMENT.workerBucketUrl}/models/pc.glb`);
+useGLTF.preload('/models_pc.glb')
