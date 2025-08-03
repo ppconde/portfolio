@@ -15,7 +15,7 @@
 		}
 	},
 	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 	"customizations": {
 		"vscode": {
@@ -36,7 +36,8 @@
 				"github.vscode-github-actions",
 				"ms-vscode.vscode-typescript-next",
 				"slevesque.shader",
-				"raczzalan.webgl-glsl-editor"
+				"raczzalan.webgl-glsl-editor",
+				"biomejs.biome"
 			]
 		}
 	}
