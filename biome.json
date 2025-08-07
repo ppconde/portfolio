@@ -6,8 +6,20 @@
 		"useIgnoreFile": false
 	},
 	"files": {
-		"ignoreUnknown": false,
-		"includes": ["functions/**/*", "src/**/*"]
+		"includes": [
+			"src/**/*",
+			"eslint.config.js",
+			"package.json",
+			"pnpm-workspace.yaml",
+			"tsconfig.json",
+			"tsconfig.node.json",
+			"tsconfig.app.json",
+			"tsconfig.worker.json",
+			"vite.config.ts",
+			"wrangler.json",
+			"index.html"
+		],
+		"ignoreUnknown": false
 	},
 	"formatter": {
 		"enabled": true,
