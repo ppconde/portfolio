@@ -16,7 +16,7 @@
 	"routes": [
 		{
 			"pattern": "ppconde.com",
-			"custom_domain": true
+			"custom_domain": false
 		}
 	],
 	"r2_buckets": [
