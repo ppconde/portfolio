@@ -7,6 +7,7 @@
 	"observability": {
 		"enabled": true
 	},
+	"workers_dev": true,
 	"upload_source_maps": true,
 	"assets": {
 		"directory": "./dist/client",
