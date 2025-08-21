@@ -10,7 +10,7 @@ import { useGLTF } from "@react-three/drei";
 import type { JSX } from "react";
 import type * as THREE from "three";
 import type { GLTF } from "three-stdlib";
-import { ENVIRONMENT } from "../constants/environment.const";
+import { R2_BUCKET } from "../constants/env";
 
 type GLTFResult = GLTF & {
 	nodes: {
@@ -23,7 +23,7 @@ type GLTFResult = GLTF & {
 };
 
 export function Computer(props: JSX.IntrinsicElements["group"]) {
-	const { nodes, materials } = useGLTF(`${ENVIRONMENT.workerBucketUrl}/models/pc.glb`) as unknown as GLTFResult;
+	const { nodes, materials } = useGLTF(`${R2_BUCKET}/models/pc.glb`) as unknown as GLTFResult;
 	return (
 		<group {...props} dispose={null}>
 			<group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
