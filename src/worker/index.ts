@@ -1,25 +1,34 @@
 import type { R2Bucket } from "@cloudflare/workers-types";
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 
-type Bindings = {
-	PORTFOLIO_BUCKET: R2Bucket;
-};
+const app = new Hono<{ Bindings: { PORTFOLIO_BUCKET: R2Bucket } }>();
 
-const app = new Hono<{ Bindings: Bindings }>();
+app.use(
+	"*",
+	cors({
+		origin: (origin) => {
+			const allowed = ["http://localhost:5173", "https://ppconde.com"];
+			return allowed.includes(origin ?? "") ? origin : "";
+		},
+	}),
+);
 
-app.get("*", async (c) => {
-	const key = c.req.path.substring(1);
-	if (!key) return c.text("Bad Request", 400);
+app.get("/models/:path{.+}", async (c) => {
+	const key = c.req.param("path");
+	const file = await c.env.PORTFOLIO_BUCKET.get(key);
 
-	const object = await c.env.PORTFOLIO_BUCKET.get(key);
-	if (!object) return c.text("Not Found", 404);
+	if (!file) {
+		return c.text("Not found", 404);
+	}
 
-	const headers: Record<string, string> = {};
-	object.writeHttpMetadata(headers as any);
-	headers.etag = object.httpEtag;
-	headers["Cache-Control"] = "public, max-age=3600";
-
-	return new Response(object.body as any, { headers });
+	// biome-ignore lint/suspicious/noExplicitAny: <@todo Fix this later>
+	return new Response(file.body as any, {
+		headers: {
+			"Content-Type": file.httpMetadata?.contentType || "application/octet-stream",
+			"Cache-Control": "public, max-age=3600",
+		},
+	});
 });
 
 export default app;
