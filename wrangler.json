@@ -14,7 +14,7 @@
 	},
 	"routes": [
 		{
-			"pattern": "ppconde.com/*",
+			"pattern": "ppconde.com",
 			"custom_domain": true
 		}
 	],
