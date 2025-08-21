@@ -8,10 +8,11 @@
 		"watch": "tsc --noEmit --watch",
 		"build": "tsc -b && vite build",
 		"lint": "exec biome check --write",
+		"check": "tsc && exec biome check && vite build && wrangler deploy --dry-run",
 		"preview": "vite preview",
 		"server:remote": "wrangler dev --remote",
 		"server:local": "wrangler dev",
-		"server:deploy": "wrangler deploy",
+		"deploy": "pnpm run build && wrangler deploy",
 		"cf-typegen": "wrangler types"
 	},
 	"dependencies": {
