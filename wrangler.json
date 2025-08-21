@@ -12,6 +12,12 @@
 		"directory": "./dist/client",
 		"not_found_handling": "single-page-application"
 	},
+	"routes": [
+		{
+			"pattern": "ppconde.com/*",
+			"custom_domain": true
+		}
+	],
 	"r2_buckets": [
 		{
 			"binding": "PORTFOLIO_BUCKET",
