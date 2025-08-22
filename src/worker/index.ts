@@ -15,16 +15,14 @@ app.use(
 	}),
 );
 
-// Serve files from R2 under /models/*
 app.get("/models/:path{.+}", async (c) => {
-	const key = c.req.param("path");
+	const key = "models/" + c.req.param("path"); // <-- FIX
 	const file = await c.env.PORTFOLIO_BUCKET.get(key);
 
 	if (!file) {
 		return c.text("Not found", 404);
 	}
 
-	// Ensure correct MIME type
 	const contentType =
 		file.httpMetadata?.contentType ||
 		(key.endsWith(".glb")
@@ -37,7 +35,6 @@ app.get("/models/:path{.+}", async (c) => {
 	return new Response(file.body as any, {
 		headers: {
 			"Content-Type": contentType,
-			// Long-term caching since assets rarely change
 			"Cache-Control": "public, max-age=31536000, immutable",
 		},
 	});
