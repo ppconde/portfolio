@@ -16,9 +16,9 @@
 		"cf-typegen": "wrangler types"
 	},
 	"dependencies": {
-		"@react-three/drei": "^10.7.3",
+		"@react-three/drei": "^10.7.4",
 		"@react-three/fiber": "^9.3.0",
-		"hono": "^4.9.2",
+		"hono": "^4.9.4",
 		"leva": "^0.10.0",
 		"r3f-perf": "^7.2.3",
 		"react": "^19.1.1",
@@ -27,12 +27,12 @@
 		"three-stdlib": "^2.36.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.2.0",
+		"@biomejs/biome": "2.2.2",
 		"@cloudflare/vite-plugin": "^1.11.7",
-		"@cloudflare/workers-types": "^4.20250821.0",
-		"@eslint/js": "^9.33.0",
+		"@cloudflare/workers-types": "^4.20250823.0",
+		"@eslint/js": "^9.34.0",
 		"@types/node": "^24.3.0",
-		"@types/react": "^19.1.10",
+		"@types/react": "^19.1.11",
 		"@types/react-dom": "^19.1.7",
 		"@types/three": "^0.179.0",
 		"@vitejs/plugin-react": "^5.0.1",
