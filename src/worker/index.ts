@@ -26,7 +26,7 @@ app.get("/models/:path{.+}", async (c) => {
 	const file = await c.env.PORTFOLIO_BUCKET.get(key);
 
 	if (!file) {
-		return c.text("Not found", 404);
+		return c.text("File not found on bucket", 404);
 	}
 
 	const contentType =
