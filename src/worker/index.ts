@@ -4,17 +4,19 @@ import { cors } from "hono/cors";
 
 const app = new Hono<{ Bindings: { PORTFOLIO_BUCKET: R2Bucket } }>();
 
-// Enable CORS for dev + prod
 app.use(
 	"*",
 	cors({
 		origin: (origin) => {
-			const allowed = [
-				/^http:\/\/localhost:5173$/,
-				/^https:\/\/ppconde\.com$/,
-				/https:\/\/.*\.pepconde-1993\.workers\.dev/,
+			if (!origin) return "";
+
+			const allowedPatterns = [
+				/^http:\/\/localhost:5173$/, // local dev
+				/^https:\/\/ppconde\.com$/, // main domain
+				/^https:\/\/.*\.pepconde-1993\.workers\.dev$/, // any subdomain
 			];
-			return allowed.some((regex) => regex.test(origin)) ? origin : "";
+
+			return allowedPatterns.some((regex) => regex.test(origin)) ? origin : "";
 		},
 	}),
 );
