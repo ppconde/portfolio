@@ -12,7 +12,7 @@ app.use(
 			const allowed = [
 				/^http:\/\/localhost:5173$/,
 				/^https:\/\/ppconde\.com$/,
-				/https:\/\/.*\.pepconde-1993\.workers\.dev/
+				/https:\/\/.*\.pepconde-1993\.workers\.dev/,
 			];
 			return allowed.some((regex) => regex.test(origin)) ? origin : "";
 		},
@@ -36,11 +36,9 @@ app.get("/models/:path{.+}", async (c) => {
 				: "application/octet-stream");
 
 	// biome-ignore lint/suspicious/noExplicitAny: <@todo fix later>
-	return new Response(file.body as any, {
-		headers: {
-			"Content-Type": contentType,
-			"Cache-Control": "public, max-age=31536000, immutable",
-		},
+	return c.body(file.body as any, 200, {
+		"Content-Type": contentType,
+		"Cache-Control": "public, max-age=31536000, immutable",
 	});
 });
 
