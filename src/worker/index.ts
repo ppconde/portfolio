@@ -10,9 +10,9 @@ app.use(
 	cors({
 		origin: (origin) => {
 			const allowed = [
-				/^http:\/\/localhost:5173$/, // local dev
-				/^https:\/\/ppconde\.com$/, // main domain
-				/^https:\/\/(?:[a-z0-9-]+-)?portfolio\.pepconde-1993\.workers\.dev$/, // any subdomain ending in -portfolio
+				/^http:\/\/localhost:5173$/,
+				/^https:\/\/ppconde\.com$/,
+				/https:\/\/.*\.pepconde-1993\.workers\.dev/
 			];
 			return allowed.some((regex) => regex.test(origin)) ? origin : "";
 		},
