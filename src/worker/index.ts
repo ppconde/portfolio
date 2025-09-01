@@ -7,7 +7,17 @@ const app = new Hono<{ Bindings: { PORTFOLIO_BUCKET: R2Bucket } }>();
 app.use(
 	"*",
 	cors({
-		origin: "*",
+		origin: (origin) => {
+			if (!origin) return "";
+
+			const allowedPatterns = [
+				/^http:\/\/localhost:5173$/, // local dev
+				/^https:\/\/ppconde\.com$/, // main domain
+				/^https:\/\/.*\.pepconde-1993\.workers\.dev$/, // any subdomain
+			];
+
+			return allowedPatterns.some((regex) => regex.test(origin)) ? origin : "";
+		},
 	}),
 );
 
@@ -31,6 +41,7 @@ app.get("/models/:path{.+}", async (c) => {
 	return c.body(file.body as any, 200, {
 		"Content-Type": contentType,
 		"Cache-Control": "public, max-age=31536000, immutable",
+		"Access-Control-Allow-Origin": "*",
 	});
 });
 
