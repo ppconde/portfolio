@@ -4,22 +4,7 @@ import { cors } from "hono/cors";
 
 const app = new Hono<{ Bindings: { PORTFOLIO_BUCKET: R2Bucket } }>();
 
-app.use(
-	"*",
-	cors({
-		origin: (origin) => {
-			if (!origin) return "";
-
-			const allowedPatterns = [
-				/^http:\/\/localhost:5173$/, // local dev
-				/^https:\/\/ppconde\.com$/, // main domain
-				/^https:\/\/.*\.portfolio\.pepconde-1993\.workers\.dev$/, // any subdomain
-			];
-
-			return allowedPatterns.some((regex) => regex.test(origin)) ? origin : "";
-		},
-	}),
-);
+app.use("*", cors({ origin: "*" }));
 
 app.get("/models/:path{.+}", async (c) => {
 	const key = `models/${c.req.param("path")}`;
