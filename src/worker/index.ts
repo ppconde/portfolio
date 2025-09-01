@@ -7,17 +7,7 @@ const app = new Hono<{ Bindings: { PORTFOLIO_BUCKET: R2Bucket } }>();
 app.use(
 	"*",
 	cors({
-		origin: (origin) => {
-			if (!origin) return "";
-
-			const allowedPatterns = [
-				/^http:\/\/localhost:5173$/, // local dev
-				/^https:\/\/ppconde\.com$/, // main domain
-				/^https:\/\/.*\.pepconde-1993\.workers\.dev$/, // any subdomain
-			];
-
-			return allowedPatterns.some((regex) => regex.test(origin)) ? origin : "";
-		},
+		origin: "*",
 	}),
 );
 
