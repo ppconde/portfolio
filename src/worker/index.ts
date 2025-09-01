@@ -13,7 +13,7 @@ app.use(
 			const allowedPatterns = [
 				/^http:\/\/localhost:5173$/, // local dev
 				/^https:\/\/ppconde\.com$/, // main domain
-				/^https:\/\/.*\.pepconde-1993\.workers\.dev$/, // any subdomain
+				/^https:\/\/.*\.portfolio\.pepconde-1993\.workers\.dev$/, // any subdomain
 			];
 
 			return allowedPatterns.some((regex) => regex.test(origin)) ? origin : "";
