@@ -34,4 +34,4 @@ export function Computer(props: JSX.IntrinsicElements["group"]) {
 	);
 }
 
-useGLTF.preload("/models_pc.glb");
+useGLTF.preload("/models/pc.glb");
