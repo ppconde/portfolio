@@ -18,7 +18,7 @@
 	"dependencies": {
 		"@react-three/drei": "^10.7.4",
 		"@react-three/fiber": "^9.3.0",
-		"hono": "^4.9.5",
+		"hono": "^4.9.6",
 		"leva": "^0.10.0",
 		"r3f-perf": "^7.2.3",
 		"react": "^19.1.1",
