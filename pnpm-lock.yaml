@@ -15,8 +15,8 @@ importers:
         specifier: ^9.4.0
         version: 9.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.180.0)
       hono:
-        specifier: ^4.10.1
-        version: 4.10.1
+        specifier: ^4.10.2
+        version: 4.10.2
       leva:
         specifier: ^0.10.0
         version: 0.10.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1432,8 +1432,8 @@ packages:
   hls.js@1.6.12:
     resolution: {integrity: sha512-Pz+7IzvkbAht/zXvwLzA/stUHNqztqKvlLbfpq6ZYU68+gZ+CZMlsbQBPUviRap+3IQ41E39ke7Ia+yvhsehEQ==}
 
-  hono@4.10.1:
-    resolution: {integrity: sha512-rpGNOfacO4WEPClfkEt1yfl8cbu10uB1lNpiI33AKoiAHwOS8lV748JiLx4b5ozO/u4qLjIvfpFsPXdY5Qjkmg==}
+  hono@4.10.2:
+    resolution: {integrity: sha512-p6fyzl+mQo6uhESLxbF5WlBOAJMDh36PljwlKtP5V1v09NxlqGru3ShK+4wKhSuhuYf8qxMmrivHOa/M7q0sMg==}
     engines: {node: '>=16.9.0'}
 
   ieee754@1.2.1:
@@ -3150,7 +3150,7 @@ snapshots:
 
   hls.js@1.6.12: {}
 
-  hono@4.10.1: {}
+  hono@4.10.2: {}
 
   ieee754@1.2.1: {}
 
