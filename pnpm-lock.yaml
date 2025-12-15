@@ -41,7 +41,7 @@ importers:
         version: 2.3.8
       '@cloudflare/vite-plugin':
         specifier: ^1.17.1
-        version: 1.17.1(vite@7.2.7(@types/node@24.10.1))(workerd@1.20251210.0)(wrangler@4.54.0(@cloudflare/workers-types@4.20251213.0))
+        version: 1.17.1(vite@7.2.7(@types/node@25.0.2))(workerd@1.20251210.0)(wrangler@4.54.0(@cloudflare/workers-types@4.20251213.0))
       '@cloudflare/workers-types':
         specifier: ^4.20251213.0
         version: 4.20251213.0
@@ -49,8 +49,8 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2
       '@types/node':
-        specifier: ^24.10.1
-        version: 24.10.1
+        specifier: ^25.0.2
+        version: 25.0.2
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.7
@@ -62,10 +62,10 @@ importers:
         version: 0.182.0
       '@vitejs/plugin-react':
         specifier: ^5.1.2
-        version: 5.1.2(vite@7.2.7(@types/node@24.10.1))
+        version: 5.1.2(vite@7.2.7(@types/node@25.0.2))
       '@vitejs/plugin-react-swc':
         specifier: ^4.2.2
-        version: 4.2.2(vite@7.2.7(@types/node@24.10.1))
+        version: 4.2.2(vite@7.2.7(@types/node@25.0.2))
       globals:
         specifier: ^16.5.0
         version: 16.5.0
@@ -74,7 +74,7 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^7.2.7
-        version: 7.2.7(@types/node@24.10.1)
+        version: 7.2.7(@types/node@25.0.2)
       wrangler:
         specifier: ^4.54.0
         version: 4.54.0(@cloudflare/workers-types@4.20251213.0)
@@ -1306,8 +1306,8 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/node@24.10.1':
-    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
+  '@types/node@25.0.2':
+    resolution: {integrity: sha512-gWEkeiyYE4vqjON/+Obqcoeffmk0NF15WSBwSs7zwVA2bAbTaE0SJ7P0WNGoJn8uE7fiaV5a7dKYIJriEqOrmA==}
 
   '@types/offscreencanvas@2019.7.3':
     resolution: {integrity: sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A==}
@@ -2227,7 +2227,7 @@ snapshots:
     optionalDependencies:
       workerd: 1.20251210.0
 
-  '@cloudflare/vite-plugin@1.17.1(vite@7.2.7(@types/node@24.10.1))(workerd@1.20251210.0)(wrangler@4.54.0(@cloudflare/workers-types@4.20251213.0))':
+  '@cloudflare/vite-plugin@1.17.1(vite@7.2.7(@types/node@25.0.2))(workerd@1.20251210.0)(wrangler@4.54.0(@cloudflare/workers-types@4.20251213.0))':
     dependencies:
       '@cloudflare/unenv-preset': 2.7.13(unenv@2.0.0-rc.24)(workerd@1.20251210.0)
       '@remix-run/node-fetch-server': 0.8.1
@@ -2237,7 +2237,7 @@ snapshots:
       picocolors: 1.1.1
       tinyglobby: 0.2.15
       unenv: 2.0.0-rc.24
-      vite: 7.2.7(@types/node@24.10.1)
+      vite: 7.2.7(@types/node@25.0.2)
       wrangler: 4.54.0(@cloudflare/workers-types@4.20251213.0)
       ws: 8.18.0
     transitivePeerDependencies:
@@ -3054,7 +3054,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/node@24.10.1':
+  '@types/node@25.0.2':
     dependencies:
       undici-types: 7.16.0
 
@@ -3103,15 +3103,15 @@ snapshots:
     optionalDependencies:
       react: 19.2.3
 
-  '@vitejs/plugin-react-swc@4.2.2(vite@7.2.7(@types/node@24.10.1))':
+  '@vitejs/plugin-react-swc@4.2.2(vite@7.2.7(@types/node@25.0.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.47
       '@swc/core': 1.15.3
-      vite: 7.2.7(@types/node@24.10.1)
+      vite: 7.2.7(@types/node@25.0.2)
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  '@vitejs/plugin-react@5.1.2(vite@7.2.7(@types/node@24.10.1))':
+  '@vitejs/plugin-react@5.1.2(vite@7.2.7(@types/node@25.0.2))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.5)
@@ -3119,7 +3119,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.53
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 7.2.7(@types/node@24.10.1)
+      vite: 7.2.7(@types/node@25.0.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -3706,7 +3706,7 @@ snapshots:
 
   v8n@1.5.1: {}
 
-  vite@7.2.7(@types/node@24.10.1):
+  vite@7.2.7(@types/node@25.0.2):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -3715,7 +3715,7 @@ snapshots:
       rollup: 4.53.3
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 24.10.1
+      '@types/node': 25.0.2
       fsevents: 2.3.3
 
   webgl-constants@1.1.1: {}
