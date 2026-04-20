@@ -17,29 +17,29 @@
 	},
 	"dependencies": {
 		"@react-three/drei": "^10.7.7",
-		"@react-three/fiber": "^9.5.0",
+		"@react-three/fiber": "^9.6.0",
 		"hono": "^4.12.14",
 		"leva": "^0.10.1",
 		"r3f-perf": "^7.2.3",
 		"react": "^19.2.5",
 		"react-dom": "^19.2.5",
-		"three": "^0.183.2",
+		"three": "^0.184.0",
 		"three-stdlib": "^2.36.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.11",
-		"@cloudflare/vite-plugin": "^1.31.2",
-		"@cloudflare/workers-types": "^4.20260412.1",
+		"@biomejs/biome": "2.4.12",
+		"@cloudflare/vite-plugin": "^1.32.3",
+		"@cloudflare/workers-types": "^4.20260418.1",
 		"@types/node": "^25.6.0",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"@types/three": "^0.183.1",
+		"@types/three": "^0.184.0",
 		"@vitejs/plugin-react": "^6.0.1",
 		"@vitejs/plugin-react-swc": "^4.3.0",
 		"globals": "^17.5.0",
-		"typescript": "^6.0.2",
+		"typescript": "^6.0.3",
 		"vite": "^8.0.8",
-		"wrangler": "^4.81.1"
+		"wrangler": "^4.83.0"
 	},
 	"packageManager": "pnpm@10.30.1"
 }
