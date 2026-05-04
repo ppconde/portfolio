@@ -17,8 +17,8 @@
 	},
 	"dependencies": {
 		"@react-three/drei": "^10.7.7",
-		"@react-three/fiber": "^9.6.0",
-		"hono": "^4.12.15",
+		"@react-three/fiber": "^9.6.1",
+		"hono": "^4.12.16",
 		"leva": "^0.10.1",
 		"r3f-perf": "^7.2.3",
 		"react": "^19.2.5",
@@ -27,19 +27,19 @@
 		"three-stdlib": "^2.36.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.13",
-		"@cloudflare/vite-plugin": "^1.33.2",
-		"@cloudflare/workers-types": "^4.20260426.1",
+		"@biomejs/biome": "2.4.14",
+		"@cloudflare/vite-plugin": "^1.35.0",
+		"@cloudflare/workers-types": "^4.20260503.1",
 		"@types/node": "^25.6.0",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@types/three": "^0.184.0",
 		"@vitejs/plugin-react": "^6.0.1",
 		"@vitejs/plugin-react-swc": "^4.3.0",
-		"globals": "^17.5.0",
+		"globals": "^17.6.0",
 		"typescript": "^6.0.3",
 		"vite": "^8.0.10",
-		"wrangler": "^4.85.0"
+		"wrangler": "^4.87.0"
 	},
 	"packageManager": "pnpm@10.30.1"
 }
