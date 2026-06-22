@@ -30,7 +30,7 @@
 		"@biomejs/biome": "2.5.0",
 		"@cloudflare/vite-plugin": "^1.42.1",
 		"@cloudflare/workers-types": "^4.20260621.1",
-		"@types/node": "^25.9.3",
+		"@types/node": "^26.0.0",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
 		"@types/three": "^0.184.1",
