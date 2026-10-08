@@ -9,8 +9,7 @@ Title: Retro computer
 import { useGLTF } from "@react-three/drei";
 import type { JSX } from "react";
 import type * as THREE from "three";
-import type { GLTF } from "three-stdlib";
-import { R2_BUCKET } from "../constants/env";
+import type { GLTF } from "three/addons/loaders/GLTFLoader.js";
 
 type GLTFResult = GLTF & {
 	nodes: {
@@ -22,8 +21,10 @@ type GLTFResult = GLTF & {
 	};
 };
 
+const MODEL_URL = "https://portfolio.pepconde-1993.workers.dev/models/pc.glb";
+
 export function Computer(props: JSX.IntrinsicElements["group"]) {
-	const { nodes, materials } = useGLTF(`${R2_BUCKET}/models/pc.glb`) as unknown as GLTFResult;
+	const { nodes, materials } = useGLTF(MODEL_URL) as unknown as GLTFResult;
 	return (
 		<group {...props} dispose={null}>
 			<group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
@@ -34,4 +35,4 @@ export function Computer(props: JSX.IntrinsicElements["group"]) {
 	);
 }
 
-useGLTF.preload("/models/pc.glb");
+useGLTF.preload(MODEL_URL);
