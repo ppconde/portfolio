@@ -8,6 +8,8 @@
 		"enabled": true
 	},
 	"workers_dev": true,
+	"preview_urls": true,
+	"previews": {},
 	"upload_source_maps": true,
 	"assets": {
 		"directory": "./dist/client",
