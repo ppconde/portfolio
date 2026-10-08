@@ -1,20 +1,12 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
-import { Suspense, useRef } from "react";
-import * as THREE from "three";
+import { Suspense } from "react";
 import { DoubleSide } from "three";
 import { Loader } from "./Loader";
 import { Computer } from "./models/Computer";
 
-export function Experience({
-	onScreenPositionChange,
-}: {
-	onScreenPositionChange: (coords: { x: number; y: number }) => void;
-}) {
-	const pcRef = useRef<THREE.Group>(null);
-	const { camera, size } = useThree();
-
+export function Experience() {
 	const {
 		positionX: pcPositionX,
 		positionY: pcPositionY,
@@ -31,35 +23,40 @@ export function Experience({
 		rotationZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
 	});
 
-	const { perfVisible } = useControls("Perf", { perfVisible: false });
-
-	// Update screen position each frame
-	useFrame(() => {
-		if (pcRef.current) {
-			const screenPos = new THREE.Vector3();
-			// Adjust to your screen's actual position within the mesh
-			pcRef.current.getWorldPosition(screenPos);
-			screenPos.project(camera);
-
-			const x = (screenPos.x * 0.5 + 0.5) * size.width;
-			const y = (1 - (screenPos.y * 0.5 + 0.5)) * size.height;
-
-			onScreenPositionChange({ x, y });
-		}
+	// ponytail: starting values, tune in the "Screen" panel until the iframe sits on the model's screen
+	const {
+		positionX: screenPositionX,
+		positionY: screenPositionY,
+		positionZ: screenPositionZ,
+		scale: screenScale,
+	} = useControls("Screen", {
+		positionX: { value: 0, min: -2, max: 2, step: 0.01 },
+		positionY: { value: 0.3, min: -2, max: 2, step: 0.01 },
+		positionZ: { value: 0.3, min: -2, max: 2, step: 0.01 },
+		scale: { value: 0.05, min: 0.001, max: 1, step: 0.001 },
 	});
+
+	const { perfVisible } = useControls("Perf", { perfVisible: false });
 
 	return (
 		<>
 			{perfVisible ? <Perf position="top-left" /> : null}
 			<ambientLight intensity={1.5} />
 			<directionalLight castShadow position={[1, 2, 3]} intensity={24.5} shadow-normalBias={0.04} />
-			<Suspense fallback={<Loader />}>
-				<Computer
-					ref={pcRef}
-					position={[pcPositionX, pcPositionY, pcPositionZ]}
-					rotation={[pcRotationX, pcRotationY, pcRotationZ]}
-				/>
-			</Suspense>
+			<group position={[pcPositionX, pcPositionY, pcPositionZ]} rotation={[pcRotationX, pcRotationY, pcRotationZ]}>
+				<Suspense fallback={<Loader />}>
+					<Computer />
+				</Suspense>
+				<Html transform position={[screenPositionX, screenPositionY, screenPositionZ]} scale={screenScale}>
+					<iframe
+						src="https://os.ppconde.com"
+						width={800}
+						height={600}
+						title="Personal OS"
+						style={{ border: "none" }}
+					/>
+				</Html>
+			</group>
 			<mesh rotation-x={-Math.PI * 0.5} position-y={-2} scale={10} receiveShadow>
 				<planeGeometry />
 				<meshStandardMaterial color={"#f7faff"} side={DoubleSide} />

@@ -21,6 +21,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["src/**/*"],
-	"types": ["@cloudflare/workers-types"]
+	"include": ["src/app"]
 }
