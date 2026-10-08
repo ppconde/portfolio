@@ -8,7 +8,7 @@
 		"watch": "tsc --noEmit --watch",
 		"build": "tsc -b && vite build",
 		"lint": "exec biome check --write",
-		"check": "tsc && exec biome check && vite build && wrangler deploy --dry-run",
+		"check": "tsc && biome check && vite build && wrangler deploy --dry-run",
 		"preview": "vite preview",
 		"server:remote": "wrangler dev --remote",
 		"server:local": "wrangler dev",
@@ -23,20 +23,16 @@
 		"r3f-perf": "^7.2.3",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
-		"three": "^0.185.1",
-		"three-stdlib": "^2.36.1"
+		"three": "^0.185.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.3",
 		"@cloudflare/vite-plugin": "^1.44.0",
-		"@cloudflare/workers-types": "^5.20260712.1",
 		"@types/node": "^26.1.1",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
 		"@types/three": "^0.185.1",
 		"@vitejs/plugin-react": "^6.0.3",
-		"@vitejs/plugin-react-swc": "^4.3.1",
-		"globals": "^17.7.0",
 		"typescript": "^7.0.2",
 		"vite": "^8.1.4",
 		"wrangler": "^4.148.0"
