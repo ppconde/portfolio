@@ -35,10 +35,10 @@ importers:
         version: 2.5.15
       '@cloudflare/vite-plugin':
         specifier: ^1.63.1
-        version: 1.63.1(@types/node@26.6.4)(vite@8.3.4(@types/node@26.6.4)(esbuild@0.28.2))(wrangler@4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.4))
+        version: 1.63.1(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2))(wrangler@4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.5))
       '@types/node':
-        specifier: ^26.6.4
-        version: 26.6.4
+        specifier: ^26.6.5
+        version: 26.6.5
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -50,16 +50,16 @@ importers:
         version: 0.186.0
       '@vitejs/plugin-react':
         specifier: ^6.1.2
-        version: 6.1.2(vite@8.3.4(@types/node@26.6.4)(esbuild@0.28.2))
+        version: 6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2))
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
       vite:
         specifier: ^8.3.4
-        version: 8.3.4(@types/node@26.6.4)(esbuild@0.28.2)
+        version: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)
       wrangler:
         specifier: ^4.149.0
-        version: 4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.4)
+        version: 4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.5)
 
 packages:
 
@@ -991,8 +991,8 @@ packages:
   '@types/draco3d@1.4.10':
     resolution: {integrity: sha512-AX22jp8Y7wwaBgAixaSvkoG4M/+PlAcm3Qs4OW8yT9DM4xUpWKeFhLueTAyZF39pviAdcDdeJoACapiAceqNcw==}
 
-  '@types/node@26.6.4':
-    resolution: {integrity: sha512-ldVPDCzj7fsaGZrLB0NuHuTvJcsNasysBAqMolr/cgxrLd1xbqxIr3XJiPnHHJUCxj5sNF1vnRj9aWnrVh5Jcg==}
+  '@types/node@26.6.5':
+    resolution: {integrity: sha512-uMzsv9stDdofIZBx4UGh4Z9ZgXnGC9seRDscilBcTHAeOFk67MZg/k9bWVfO+bk4qZmG+l52hRnLwUiH2LnJTg==}
 
   '@types/offscreencanvas@2019.7.3':
     resolution: {integrity: sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A==}
@@ -1847,14 +1847,14 @@ snapshots:
     optionalDependencies:
       workerd: 1.20261006.1
 
-  '@cloudflare/vite-plugin@1.63.1(@types/node@26.6.4)(vite@8.3.4(@types/node@26.6.4)(esbuild@0.28.2))(wrangler@4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.4))':
+  '@cloudflare/vite-plugin@1.63.1(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2))(wrangler@4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.5))':
     dependencies:
       '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261006.1)
-      miniflare: 5.20261006.1-alpha(@types/node@26.6.4)
+      miniflare: 5.20261006.1-alpha(@types/node@26.6.5)
       unenv: 2.0.0-rc.24
-      vite: 8.3.4(@types/node@26.6.4)(esbuild@0.28.2)
+      vite: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)
       workerd: 1.20261006.1
-      wrangler: 4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.4)
+      wrangler: 4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.5)
       ws: 8.21.0
     transitivePeerDependencies:
       - '@types/node'
@@ -2507,7 +2507,7 @@ snapshots:
 
   '@types/draco3d@1.4.10': {}
 
-  '@types/node@26.6.4':
+  '@types/node@26.6.5':
     dependencies:
       undici-types: 8.9.0
 
@@ -2611,10 +2611,10 @@ snapshots:
     optionalDependencies:
       react: 19.3.0
 
-  '@vitejs/plugin-react@6.1.2(vite@8.3.4(@types/node@26.6.4)(esbuild@0.28.2))':
+  '@vitejs/plugin-react@6.1.2(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.4(@types/node@26.6.4)(esbuild@0.28.2)
+      vite: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)
 
   assign-symbols@1.0.0: {}
 
@@ -2857,10 +2857,10 @@ snapshots:
 
   meshoptimizer@1.1.1: {}
 
-  miniflare@5.20261006.1-alpha(@types/node@26.6.4):
+  miniflare@5.20261006.1-alpha(@types/node@26.6.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      sharp: 0.35.5(@types/node@26.6.4)
+      sharp: 0.35.5(@types/node@26.6.5)
       undici: 7.29.1
       workerd: 1.20261006.1
       ws: 8.21.0
@@ -2992,7 +2992,7 @@ snapshots:
       is-plain-object: 2.0.4
       split-string: 3.1.0
 
-  sharp@0.35.5(@types/node@26.6.4):
+  sharp@0.35.5(@types/node@26.6.5):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -3023,7 +3023,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.5
       '@img/sharp-win32-ia32': 0.35.5
       '@img/sharp-win32-x64': 0.35.5
-      '@types/node': 26.6.4
+      '@types/node': 26.6.5
 
   shebang-command@2.0.0:
     dependencies:
@@ -3138,7 +3138,7 @@ snapshots:
 
   v8n@1.5.1: {}
 
-  vite@8.3.4(@types/node@26.6.4)(esbuild@0.28.2):
+  vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -3146,7 +3146,7 @@ snapshots:
       rolldown: 1.2.13
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.6.4
+      '@types/node': 26.6.5
       esbuild: 0.28.2
       fsevents: 2.3.3
 
@@ -3166,13 +3166,13 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20261006.1
       '@cloudflare/workerd-windows-64': 1.20261006.1
 
-  wrangler@4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.4):
+  wrangler@4.149.0(@cloudflare/workers-types@5.20261008.1)(@types/node@26.6.5):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261006.1)
       blake3-wasm: 2.1.5
       esbuild: 0.28.2
-      miniflare: 5.20261006.1-alpha(@types/node@26.6.4)
+      miniflare: 5.20261006.1-alpha(@types/node@26.6.5)
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20261006.1
