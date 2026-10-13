@@ -1,4 +1,5 @@
 import { Html } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Suspense } from "react";
@@ -25,6 +26,11 @@ export function Experience() {
 
 	const { perfVisible } = useControls("Perf", { perfVisible: false });
 
+	// ponytail: drei's <Html> picks its DOM target on render and, if it changes, unmounts and recreates its React root on
+	// the same element; under R3F 9.8 + React 19.3 the late unmount wipes the iframe. Mount it only once R3F's events are
+	// connected so the target never changes. Drop this guard once drei defers that unmount (pmndrs/drei#2867).
+	const eventsConnected = useThree((state) => state.events.connected);
+
 	return (
 		<>
 			{perfVisible ? <Perf position="top-left" /> : null}
@@ -38,15 +44,17 @@ export function Experience() {
 					Sits on the monitor glass, measured from pc.glb: 0.199 x 0.150 units, centred at (-0.0395, 0.037), front face z ≈ 0.39.
 					drei maps 1 CSS px to 10 / 400 = 0.025 units, so the 800px iframe is 20 units wide before scaling.
 				*/}
-				<Html transform position={[-0.0395, 0.037, 0.39]} scale={0.199 / 20}>
-					<iframe
-						src="https://os.ppconde.com"
-						width={800}
-						height={600}
-						title="Personal OS"
-						style={{ border: "none" }}
-					/>
-				</Html>
+				{eventsConnected ? (
+					<Html transform position={[-0.0395, 0.037, 0.39]} scale={0.199 / 20}>
+						<iframe
+							src="https://os.ppconde.com"
+							width={800}
+							height={600}
+							title="Personal OS"
+							style={{ border: "none" }}
+						/>
+					</Html>
+				) : null}
 			</group>
 			<mesh rotation-x={-Math.PI * 0.5} position-y={-2} scale={10} receiveShadow>
 				<planeGeometry />
