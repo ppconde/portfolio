@@ -23,19 +23,6 @@ export function Experience() {
 		rotationZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
 	});
 
-	// ponytail: starting values, tune in the "Screen" panel until the iframe sits on the model's screen
-	const {
-		positionX: screenPositionX,
-		positionY: screenPositionY,
-		positionZ: screenPositionZ,
-		scale: screenScale,
-	} = useControls("Screen", {
-		positionX: { value: 0, min: -2, max: 2, step: 0.01 },
-		positionY: { value: 0.3, min: -2, max: 2, step: 0.01 },
-		positionZ: { value: 0.3, min: -2, max: 2, step: 0.01 },
-		scale: { value: 0.05, min: 0.001, max: 1, step: 0.001 },
-	});
-
 	const { perfVisible } = useControls("Perf", { perfVisible: false });
 
 	return (
@@ -47,13 +34,19 @@ export function Experience() {
 				<Suspense fallback={<Loader />}>
 					<Computer />
 				</Suspense>
-				<Html transform position={[screenPositionX, screenPositionY, screenPositionZ]} scale={screenScale}>
+				{/* Fixed-size overlay pinned to the PC's projected screen position */}
+				<Html>
 					<iframe
 						src="https://os.ppconde.com"
 						width={800}
 						height={600}
 						title="Personal OS"
-						style={{ border: "none" }}
+						style={{
+							position: "absolute",
+							left: -490, // Adjust offsets based on model's screen size
+							top: -230,
+							border: "none",
+						}}
 					/>
 				</Html>
 			</group>
