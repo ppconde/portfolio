@@ -34,19 +34,17 @@ export function Experience() {
 				<Suspense fallback={<Loader />}>
 					<Computer />
 				</Suspense>
-				{/* Fixed-size overlay pinned to the PC's projected screen position */}
-				<Html>
+				{/*
+					Sits on the monitor glass, measured from pc.glb: 0.199 x 0.150 units, centred at (-0.0395, 0.037), front face z ≈ 0.39.
+					drei maps 1 CSS px to 10 / 400 = 0.025 units, so the 800px iframe is 20 units wide before scaling.
+				*/}
+				<Html transform position={[-0.0395, 0.037, 0.39]} scale={0.199 / 20}>
 					<iframe
 						src="https://os.ppconde.com"
 						width={800}
 						height={600}
 						title="Personal OS"
-						style={{
-							position: "absolute",
-							left: -490, // Adjust offsets based on model's screen size
-							top: -230,
-							border: "none",
-						}}
+						style={{ border: "none" }}
 					/>
 				</Html>
 			</group>
