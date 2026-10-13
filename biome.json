@@ -8,7 +8,6 @@
 	"files": {
 		"includes": [
 			"src/**/*",
-			"eslint.config.js",
 			"package.json",
 			"pnpm-workspace.yaml",
 			"tsconfig.json",

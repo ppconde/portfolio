@@ -9,7 +9,14 @@
 	},
 	"workers_dev": true,
 	"preview_urls": true,
-	"previews": {},
+	"previews": {
+		"r2_buckets": [
+			{
+				"binding": "PORTFOLIO_BUCKET",
+				"bucket_name": "portfolio-bucket"
+			}
+		]
+	},
 	"upload_source_maps": true,
 	"assets": {
 		"directory": "./dist/client",

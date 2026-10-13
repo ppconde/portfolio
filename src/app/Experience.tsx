@@ -1,20 +1,13 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
-import { Suspense, useRef } from "react";
-import * as THREE from "three";
+import { Suspense } from "react";
 import { DoubleSide } from "three";
 import { Loader } from "./Loader";
 import { Computer } from "./models/Computer";
 
-export function Experience({
-	onScreenPositionChange,
-}: {
-	onScreenPositionChange: (coords: { x: number; y: number }) => void;
-}) {
-	const pcRef = useRef<THREE.Group>(null);
-	const { camera, size } = useThree();
-
+export function Experience() {
 	const {
 		positionX: pcPositionX,
 		positionY: pcPositionY,
@@ -33,33 +26,36 @@ export function Experience({
 
 	const { perfVisible } = useControls("Perf", { perfVisible: false });
 
-	// Update screen position each frame
-	useFrame(() => {
-		if (pcRef.current) {
-			const screenPos = new THREE.Vector3();
-			// Adjust to your screen's actual position within the mesh
-			pcRef.current.getWorldPosition(screenPos);
-			screenPos.project(camera);
-
-			const x = (screenPos.x * 0.5 + 0.5) * size.width;
-			const y = (1 - (screenPos.y * 0.5 + 0.5)) * size.height;
-
-			onScreenPositionChange({ x, y });
-		}
-	});
+	// ponytail: drei's <Html> picks its DOM target on render and, if it changes, unmounts and recreates its React root on
+	// the same element; under R3F 9.8 + React 19.3 the late unmount wipes the iframe. Mount it only once R3F's events are
+	// connected so the target never changes. Drop this guard once drei defers that unmount (pmndrs/drei#2867).
+	const eventsConnected = useThree((state) => state.events.connected);
 
 	return (
 		<>
 			{perfVisible ? <Perf position="top-left" /> : null}
 			<ambientLight intensity={1.5} />
 			<directionalLight castShadow position={[1, 2, 3]} intensity={24.5} shadow-normalBias={0.04} />
-			<Suspense fallback={<Loader />}>
-				<Computer
-					ref={pcRef}
-					position={[pcPositionX, pcPositionY, pcPositionZ]}
-					rotation={[pcRotationX, pcRotationY, pcRotationZ]}
-				/>
-			</Suspense>
+			<group position={[pcPositionX, pcPositionY, pcPositionZ]} rotation={[pcRotationX, pcRotationY, pcRotationZ]}>
+				<Suspense fallback={<Loader />}>
+					<Computer />
+				</Suspense>
+				{/*
+					Sits on the monitor glass, measured from pc.glb: 0.199 x 0.150 units, centred at (-0.0395, 0.037), front face z ≈ 0.39.
+					drei maps 1 CSS px to 10 / 400 = 0.025 units, so the 800px iframe is 20 units wide before scaling.
+				*/}
+				{eventsConnected ? (
+					<Html transform position={[-0.0395, 0.037, 0.39]} scale={0.199 / 20}>
+						<iframe
+							src="https://os.ppconde.com"
+							width={800}
+							height={600}
+							title="Personal OS"
+							style={{ border: "none" }}
+						/>
+					</Html>
+				) : null}
+			</group>
 			<mesh rotation-x={-Math.PI * 0.5} position-y={-2} scale={10} receiveShadow>
 				<planeGeometry />
 				<meshStandardMaterial color={"#f7faff"} side={DoubleSide} />
