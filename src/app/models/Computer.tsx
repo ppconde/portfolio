@@ -7,7 +7,6 @@ Title: Retro computer
 */
 
 import { useGLTF } from "@react-three/drei";
-import type { JSX } from "react";
 import type * as THREE from "three";
 import type { GLTF } from "three/addons/loaders/GLTFLoader.js";
 
@@ -21,12 +20,13 @@ type GLTFResult = GLTF & {
 	};
 };
 
-const MODEL_URL = "https://portfolio.pepconde-1993.workers.dev/models/pc.glb";
+// Served by this app's own worker (src/worker/index.ts) from R2.
+const MODEL_URL = "/models/pc.glb";
 
-export function Computer(props: JSX.IntrinsicElements["group"]) {
+export function Computer() {
 	const { nodes, materials } = useGLTF(MODEL_URL) as unknown as GLTFResult;
 	return (
-		<group {...props} dispose={null}>
+		<group dispose={null}>
 			<group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
 				<mesh name="Object_2" castShadow receiveShadow geometry={nodes.Object_2.geometry} material={materials.None} />
 				<mesh name="Object_3" castShadow receiveShadow geometry={nodes.Object_3.geometry} material={materials.None} />
