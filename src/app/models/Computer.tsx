@@ -32,7 +32,7 @@ const INK = { color: "#1c1c1c", thickness: 2.5 };
 const FOLD_ANGLE = 25;
 
 // Illustration grain, injected into the toon shader: soft grime blotches in object space (model is in metres),
-// plus fixed per-pixel paper speckle in screen space.
+// fixed per-pixel paper speckle in screen space, and scattered hairline scratches.
 const GRAIN_PARS = /* glsl */ `
 varying vec3 vObjPos;
 float hash13(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
@@ -46,13 +46,44 @@ float valueNoise(vec3 p) {
 		mix(mix(hash13(i + vec3(0, 0, 1)), hash13(i + vec3(1, 0, 1)), f.x), mix(hash13(i + vec3(0, 1, 1)), hash13(i + vec3(1, 1, 1)), f.x), f.y),
 		f.z);
 }
+
+// Hand-drawn scratches: short tapered hairlines scattered over a 3 cm grid, drawn on the two axes facing the surface.
+varying vec3 vObjNormal;
+vec2 surfaceUV(vec3 p, vec3 n) {
+	vec3 a = abs(n);
+	if (a.x > a.y && a.x > a.z) return p.yz;
+	if (a.y > a.z) return p.xz;
+	return p.xy;
+}
+float scratches(vec2 uv) {
+	const float CELL = 0.03;
+	vec2 id = floor(uv / CELL);
+	float px = max(length(fwidth(uv)), 0.0001); // one screen pixel, in metres on the surface
+	float ink = 0.0;
+	for (int j = -1; j <= 1; j++) {
+		for (int i = -1; i <= 1; i++) {
+			vec2 c = id + vec2(i, j);
+			float h = hash12(c * 1.37 + 11.0);
+			if (h > 0.2) continue; // ~1 in 5 cells has a scratch
+			float angle = hash12(c + 3.1) * 3.14159;
+			vec2 dir = vec2(cos(angle), sin(angle));
+			vec2 centre = (c + vec2(hash12(c + 7.7), hash12(c + 9.3))) * CELL;
+			float halfLen = CELL * (0.15 + 0.3 * hash12(c + 5.5));
+			vec2 d = uv - centre;
+			float t = clamp(dot(d, dir), -halfLen, halfLen);
+			float w = px * 0.7 * (1.0 - abs(t) / halfLen); // thins out towards both ends
+			ink = max(ink, 1.0 - smoothstep(w, w + px, length(d - dir * t)));
+		}
+	}
+	return ink;
+}
 `;
 
 function addGrain(material: MeshToonMaterial) {
 	material.onBeforeCompile = (shader) => {
 		shader.vertexShader = shader.vertexShader
-			.replace("#include <common>", "#include <common>\nvarying vec3 vObjPos;")
-			.replace("#include <begin_vertex>", "#include <begin_vertex>\nvObjPos = position;");
+			.replace("#include <common>", "#include <common>\nvarying vec3 vObjPos;\nvarying vec3 vObjNormal;")
+			.replace("#include <begin_vertex>", "#include <begin_vertex>\nvObjPos = position;\nvObjNormal = normal;");
 		shader.fragmentShader = shader.fragmentShader
 			.replace("#include <common>", `#include <common>\n${GRAIN_PARS}`)
 			.replace(
@@ -60,7 +91,10 @@ function addGrain(material: MeshToonMaterial) {
 				`#include <color_fragment>
 				float grime = valueNoise(vObjPos * 60.0) * 0.6 + valueNoise(vObjPos * 220.0) * 0.4;
 				float speck = hash12(floor(gl_FragCoord.xy));
-				diffuseColor.rgb *= 1.0 - 0.1 * grime - 0.07 * speck;`,
+				diffuseColor.rgb *= 1.0 - 0.1 * grime - 0.07 * speck;
+				// scratches pull towards mid grey: dark on the light plastic, scuffed-light on the dark parts
+				float scratch = scratches(surfaceUV(vObjPos, normalize(vObjNormal)));
+				diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.22), 0.55 * scratch);`,
 			);
 	};
 	material.customProgramCacheKey = () => "toon-grain";
