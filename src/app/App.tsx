@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
 import styles from "./App.module.css";
 import { Experience } from "./Experience";
+import { Loader } from "./Loader";
 
 export function App() {
 	return (
@@ -22,6 +23,7 @@ export function App() {
 			>
 				<Experience />
 			</Canvas>
+			<Loader />
 		</div>
 	);
 }
