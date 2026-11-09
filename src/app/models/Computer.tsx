@@ -26,8 +26,8 @@ const MODEL_URL = "/models/pc.glb";
 const toonRamp = new DataTexture(new Uint8Array([110, 185, 255]), 3, 1, RedFormat);
 toonRamp.needsUpdate = true;
 
-// Ink line width in world units (the model is in metres): ~1.5 mm reads as a ~2px line at the default framing.
-const INK = { color: "#1c1c1c", thickness: 0.0015 };
+// Ink lines. In drei 10's non-screenspace mode `thickness` is in pixels, so the line width stays constant at any zoom.
+const INK = { color: "#1c1c1c", thickness: 2.5 };
 
 export function Computer() {
 	const { nodes } = useGLTF(MODEL_URL) as unknown as GLTFResult;
