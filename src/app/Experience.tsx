@@ -4,7 +4,6 @@ import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Suspense } from "react";
 import { DoubleSide } from "three";
-import { Loader } from "./Loader";
 import { Computer } from "./models/Computer";
 
 export function Experience() {
@@ -37,7 +36,7 @@ export function Experience() {
 			<ambientLight intensity={0.4} />
 			<directionalLight castShadow position={[1, 2, 3]} intensity={2.5} shadow-normalBias={0.04} />
 			<group position={[pcPositionX, pcPositionY, pcPositionZ]} rotation={[pcRotationX, pcRotationY, pcRotationZ]}>
-				<Suspense fallback={<Loader />}>
+				<Suspense fallback={null}>
 					<Computer />
 				</Suspense>
 				{/*
