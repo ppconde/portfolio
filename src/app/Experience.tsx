@@ -16,9 +16,9 @@ export function Experience() {
 		rotationY: pcRotationY,
 		rotationZ: pcRotationZ,
 	} = useControls("Pc", {
-		positionX: { value: 2.7, min: -10, max: 10, step: 0.1 },
-		positionY: { value: 0.9, min: -10, max: 10, step: 0.1 },
-		positionZ: { value: 4.4, min: -10, max: 10, step: 0.1 },
+		positionX: { value: 2.5, min: -10, max: 10, step: 0.1 },
+		positionY: { value: 0.6, min: -10, max: 10, step: 0.1 },
+		positionZ: { value: 4.2, min: -10, max: 10, step: 0.1 },
 		rotationX: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
 		rotationY: { value: 0.5, min: -Math.PI, max: Math.PI, step: 0.01 },
 		rotationZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
@@ -34,22 +34,22 @@ export function Experience() {
 	return (
 		<>
 			{perfVisible ? <Perf position="top-left" /> : null}
-			<ambientLight intensity={1.5} />
-			<directionalLight castShadow position={[1, 2, 3]} intensity={24.5} shadow-normalBias={0.04} />
+			<ambientLight intensity={0.4} />
+			<directionalLight castShadow position={[1, 2, 3]} intensity={2.5} shadow-normalBias={0.04} />
 			<group position={[pcPositionX, pcPositionY, pcPositionZ]} rotation={[pcRotationX, pcRotationY, pcRotationZ]}>
 				<Suspense fallback={<Loader />}>
 					<Computer />
 				</Suspense>
 				{/*
-					Sits on the monitor glass, measured from pc.glb: 0.199 x 0.150 units, centred at (-0.0395, 0.037), front face z ≈ 0.39.
-					drei maps 1 CSS px to 10 / 400 = 0.025 units, so the 800px iframe is 20 units wide before scaling.
+					Sits on the monitor glass, measured from pc.glb: 0.248 x 0.166 units (3:2), centred at (0, 0.318), front face z ≈ 0.108.
+					drei maps 1 CSS px to 10 / 400 = 0.025 units, so the 1200px iframe is 30 units wide before scaling.
 				*/}
 				{eventsConnected ? (
-					<Html transform position={[-0.0395, 0.037, 0.39]} scale={0.199 / 20}>
+					<Html transform position={[0, 0.318, 0.108]} scale={0.248 / 30}>
 						<iframe
 							src="https://os.ppconde.com"
-							width={800}
-							height={600}
+							width={1200}
+							height={800}
 							title="Personal OS"
 							style={{ border: "none" }}
 						/>
