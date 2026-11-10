@@ -8,8 +8,6 @@ import { addGrain, INK, toonRamp } from "./Computer";
 // Served by this app's own worker (src/worker/index.ts) from R2, like pc.glb.
 const MODEL_URL = "/models/room.glb";
 
-const C = { red: "#c23b2b", black: "#1c1c1c", paper: "#efe8d6" };
-
 function canvasTexture(w: number, h: number, draw: (ctx: CanvasRenderingContext2D) => void) {
 	const canvas = document.createElement("canvas");
 	canvas.width = w;
@@ -24,131 +22,395 @@ function canvasTexture(w: number, h: number, draw: (ctx: CanvasRenderingContext2
 	return texture;
 }
 
-function halftone(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, step = 10, max = 2.4) {
-	ctx.fillStyle = color;
-	for (let y = 0; y < h; y += step)
-		for (let x = (y / step) % 2 ? step / 2 : 0; x < w; x += step) {
-			const r = max * (y / h);
-			ctx.beginPath();
-			ctx.arc(x, y, r, 0, Math.PI * 2);
-			ctx.fill();
-		}
+// Poster style after Ramon Nunez's sketch portraits: shapes filled with choppy rectangular brush blocks, loose pencil
+// lines that overshoot them, lots of white paper. Seeded, so the art is the same on every load.
+function rng(seed: number) {
+	return () => {
+		seed = (seed * 16807) % 2147483647;
+		return seed / 2147483647;
+	};
 }
 
-// MF DOOM: masked figure with a mic, red and black on cream.
+function poly(points: number[][]) {
+	const path = new Path2D();
+	for (const [x, y] of points) path.lineTo(x, y);
+	path.closePath();
+	return path;
+}
+
+// Fill `shape` with its base colour, then scatter blocks from the rest of the palette inside it.
+function blocks(
+	ctx: CanvasRenderingContext2D,
+	shape: Path2D,
+	[x, y, w, h]: number[],
+	[base, ...palette]: string[],
+	r: () => number,
+	count = 140,
+	size = 70,
+) {
+	ctx.save();
+	ctx.clip(shape);
+	ctx.fillStyle = base;
+	ctx.fill(shape);
+	for (let i = 0; i < count; i++) {
+		ctx.globalAlpha = 0.45 + r() * 0.55;
+		ctx.fillStyle = palette[Math.floor(r() * palette.length)];
+		const bw = size * (0.2 + r());
+		const bh = size * (0.08 + r() * 0.5);
+		ctx.fillRect(x + r() * w - bw / 2, y + r() * h - bh / 2, bw, bh);
+	}
+	ctx.restore();
+}
+
+// A pencil line drawn a couple of times, each pass jittered, so it wobbles and overshoots like a quick sketch.
+function sketch(ctx: CanvasRenderingContext2D, points: number[][], r: () => number, width = 4.5, passes = 2) {
+	ctx.save();
+	ctx.strokeStyle = "rgba(28,28,28,0.8)";
+	ctx.lineWidth = width;
+	ctx.lineCap = "round";
+	ctx.lineJoin = "round";
+	for (let p = 0; p < passes; p++) {
+		ctx.beginPath();
+		for (const [x, y] of points) ctx.lineTo(x + (r() - 0.5) * 16, y + (r() - 0.5) * 16);
+		ctx.stroke();
+	}
+	ctx.restore();
+}
+
+const PAPER = "#f4f1ea";
+const INKS = ["#1a201c", "#26302a", "#0f1210", "#34403a", "#4a5850"];
+
+// MF DOOM: close portrait in the metal mask, lit from the left, hood framing it, red cardigan and a mic.
 function doomPoster() {
 	return canvasTexture(720, 1000, (ctx) => {
-		ctx.fillStyle = C.paper;
+		const r = rng(21);
+		const METAL = ["#9c998f", "#b5b1a5", "#87847b", "#c9c5b8"];
+		const LIT = ["#e4e0d3", "#f2efe6", "#d2cec1"];
+		const SHADE = ["#5f5d57", "#4a4843", "#6f6c64", "#3a3935"];
+		// paints `shape`, then lays highlight blocks on its left half and shadow blocks on its right
+		const lit = (shape: Path2D, box: number[], count: number, size: number) => {
+			blocks(ctx, shape, box, METAL, r, count, size);
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(0, 0, 290, 1000);
+			ctx.clip();
+			blocks(ctx, shape, box, [LIT[0], ...LIT], r, count / 3, size * 0.6);
+			ctx.restore();
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(430, 0, 290, 1000);
+			ctx.clip();
+			blocks(ctx, shape, box, [SHADE[0], ...SHADE], r, count / 2, size * 0.7);
+			ctx.restore();
+		};
+		ctx.fillStyle = PAPER;
 		ctx.fillRect(0, 0, 720, 1000);
-		ctx.fillStyle = C.red;
-		ctx.fillRect(40, 40, 640, 700);
-		halftone(ctx, 720, 740, "rgba(0,0,0,0.25)");
-		ctx.fillStyle = C.paper;
-		ctx.fillRect(0, 740, 720, 260);
-		// shoulders (cardigan)
-		ctx.fillStyle = C.black;
-		ctx.beginPath();
-		ctx.moveTo(110, 740);
-		ctx.quadraticCurveTo(140, 560, 360, 545);
-		ctx.quadraticCurveTo(580, 560, 610, 740);
-		ctx.fill();
-		// hood / beanie
-		ctx.beginPath();
-		ctx.ellipse(360, 360, 150, 190, 0, 0, Math.PI * 2);
-		ctx.fill();
-		// mask
-		ctx.fillStyle = "#b9b4a8";
-		ctx.beginPath();
-		ctx.moveTo(360, 215);
-		ctx.lineTo(470, 300);
-		ctx.lineTo(470, 400);
-		ctx.lineTo(420, 410);
-		ctx.lineTo(420, 520);
-		ctx.lineTo(395, 520);
-		ctx.lineTo(385, 420);
-		ctx.lineTo(335, 420);
-		ctx.lineTo(325, 520);
-		ctx.lineTo(300, 520);
-		ctx.lineTo(300, 410);
-		ctx.lineTo(250, 400);
-		ctx.lineTo(250, 300);
-		ctx.closePath();
-		ctx.fill();
-		ctx.lineWidth = 6;
-		ctx.strokeStyle = C.black;
-		ctx.stroke();
-		// eye slits
-		ctx.fillStyle = C.black;
-		ctx.fillRect(275, 320, 70, 22);
-		ctx.fillRect(375, 320, 70, 22);
-		// mouth
-		ctx.fillRect(335, 445, 50, 14);
-		// mic
+		// red cardigan, V neck
+		const body = new Path2D();
+		body.moveTo(40, 1000);
+		body.quadraticCurveTo(70, 760, 250, 720);
+		body.lineTo(360, 860);
+		body.lineTo(470, 720);
+		body.quadraticCurveTo(650, 760, 680, 1000);
+		blocks(ctx, body, [40, 720, 640, 280], ["#b8322a", "#d9463a", "#8e2620", "#e0604a", "#6e1d18"], r, 170, 70);
+		// hood
+		const hood = new Path2D();
+		hood.ellipse(360, 450, 230, 300, 0, 0, Math.PI * 2);
+		blocks(ctx, hood, [130, 150, 460, 600], INKS, r, 220, 80);
+		// skin behind the open mouth
+		const mouth = poly([
+			[300, 580],
+			[420, 580],
+			[430, 700],
+			[290, 700],
+		]);
+		blocks(ctx, mouth, [290, 580, 140, 120], ["#8a5a3c", "#a46a46", "#6e4630", "#c08058"], r, 40, 30);
+		ctx.fillStyle = "#2a1712";
+		ctx.fillRect(318, 640, 84, 14);
+		// mask: forehead plate down to the cheek plates, open at the mouth
+		const mask = poly([
+			[360, 230],
+			[455, 270],
+			[510, 360],
+			[515, 500],
+			[485, 590],
+			[440, 600],
+			[425, 575],
+			[295, 575],
+			[280, 600],
+			[235, 590],
+			[205, 500],
+			[210, 360],
+			[265, 270],
+		]);
+		lit(mask, [205, 230, 310, 370], 150, 55);
+		// chin guard: two bars either side of the mouth
+		for (const x of [282, 418])
+			lit(
+				poly([
+					[x - 2, 590],
+					[x + 22, 590],
+					[x + 16, 720],
+					[x + 4, 720],
+				]),
+				[x - 2, 590, 24, 130],
+				16,
+				16,
+			);
+		// nose ridge in shade, and the seam between the forehead and cheek plates
+		ctx.fillStyle = "rgba(40,38,35,0.5)";
+		ctx.fill(
+			poly([
+				[360, 440],
+				[338, 545],
+				[382, 545],
+			]),
+		);
+		sketch(
+			ctx,
+			[
+				[215, 470],
+				[300, 488],
+				[420, 488],
+				[505, 470],
+			],
+			r,
+			3,
+			1,
+		);
+		// eye slits, angled down to the centre
+		ctx.fillStyle = "#0f1210";
+		ctx.fill(
+			poly([
+				[240, 400],
+				[335, 418],
+				[335, 440],
+				[242, 424],
+			]),
+		);
+		ctx.fill(
+			poly([
+				[480, 400],
+				[385, 418],
+				[385, 440],
+				[478, 424],
+			]),
+		);
+		// rivets
+		for (const [x, y] of [
+			[250, 330],
+			[470, 330],
+			[235, 540],
+			[485, 540],
+		]) {
+			ctx.beginPath();
+			ctx.arc(x, y, 7, 0, Math.PI * 2);
+			ctx.fill();
+		}
+		// mic, crossing the lower right
 		ctx.save();
-		ctx.translate(560, 470);
-		ctx.rotate(0.25);
-		ctx.fillRect(-18, -40, 36, 190);
-		ctx.beginPath();
-		ctx.arc(0, -50, 30, 0, Math.PI * 2);
-		ctx.fill();
+		ctx.translate(560, 760);
+		ctx.rotate(0.45);
+		blocks(
+			ctx,
+			poly([
+				[-18, 0],
+				[18, 0],
+				[13, 230],
+				[-13, 230],
+			]),
+			[-18, 0, 36, 230],
+			INKS,
+			r,
+			30,
+			30,
+		);
+		const head = new Path2D();
+		head.arc(0, -30, 38, 0, Math.PI * 2);
+		blocks(ctx, head, [-38, -68, 76, 76], ["#3a3a3a", "#6b6b6b", "#9a9a9a", "#1c1c1c", "#c9c5b8"], r, 50, 24);
 		ctx.restore();
-		// title
-		ctx.fillStyle = C.black;
-		ctx.font = "900 190px Impact, 'Arial Narrow', sans-serif";
+		// pencil
+		sketch(
+			ctx,
+			[
+				[150, 560],
+				[130, 400],
+				[180, 250],
+				[300, 165],
+				[430, 160],
+				[550, 240],
+				[600, 380],
+				[585, 560],
+			],
+			r,
+		);
+		sketch(
+			ctx,
+			[
+				[215, 365],
+				[260, 268],
+				[360, 225],
+				[460, 268],
+				[512, 365],
+			],
+			r,
+			3,
+		);
+		sketch(
+			ctx,
+			[
+				[200, 505],
+				[235, 595],
+				[285, 605],
+			],
+			r,
+			3,
+		);
+		sketch(
+			ctx,
+			[
+				[520, 505],
+				[488, 595],
+				[436, 605],
+			],
+			r,
+			3,
+		);
+		sketch(
+			ctx,
+			[
+				[30, 1000],
+				[70, 800],
+				[240, 715],
+				[360, 870],
+				[480, 715],
+				[650, 800],
+				[690, 1000],
+			],
+			r,
+			3.5,
+		);
+		sketch(
+			ctx,
+			[
+				[110, 300],
+				[70, 250],
+				[95, 200],
+				[140, 240],
+			],
+			r,
+			3,
+			1,
+		);
+		sketch(
+			ctx,
+			[
+				[600, 200],
+				[650, 160],
+				[670, 220],
+				[630, 260],
+			],
+			r,
+			3,
+			1,
+		);
+		// title, with a misregistered red print behind
+		ctx.font = "900 150px Impact, 'Arial Narrow', sans-serif";
 		ctx.textAlign = "center";
-		ctx.fillText("MF DOOM", 360, 935);
+		ctx.fillStyle = "#c23b2b";
+		ctx.fillText("MF DOOM", 368, 152);
+		ctx.fillStyle = "#1c1c1c";
+		ctx.fillText("MF DOOM", 360, 145);
 	});
 }
 
-// Massive Attack: a stag beetle in black ink, lots of white space.
+// Massive Attack, Mezzanine: a stag beetle, ink-dark blocks with a sheen, sketched legs, lots of white space.
 function beetlePoster() {
 	return canvasTexture(720, 1000, (ctx) => {
-		ctx.fillStyle = "#f4f1ea";
+		const r = rng(11);
+		ctx.fillStyle = PAPER;
 		ctx.fillRect(0, 0, 720, 1000);
-		ctx.strokeStyle = C.black;
-		ctx.fillStyle = C.black;
-		ctx.lineCap = "round";
-		ctx.lineWidth = 7;
-		// legs
+		// legs and mandibles in pencil
 		for (const [y, dx, dy] of [
 			[430, 150, -40],
-			[500, 170, 20],
-			[570, 150, 90],
-		]) {
-			for (const s of [-1, 1]) {
-				ctx.beginPath();
-				ctx.moveTo(360, y);
-				ctx.lineTo(360 + s * dx * 0.7, y + dy * 0.4);
-				ctx.lineTo(360 + s * dx, y + dy);
-				ctx.stroke();
-			}
-		}
-		// mandibles
-		for (const s of [-1, 1]) {
-			ctx.beginPath();
-			ctx.moveTo(360 + s * 30, 320);
-			ctx.bezierCurveTo(360 + s * 120, 260, 360 + s * 90, 170, 360 + s * 20, 150);
-			ctx.lineWidth = 16;
-			ctx.stroke();
-		}
-		// head, thorax, abdomen
-		ctx.beginPath();
-		ctx.ellipse(360, 340, 75, 45, 0, 0, Math.PI * 2);
-		ctx.fill();
-		ctx.beginPath();
-		ctx.ellipse(360, 420, 85, 45, 0, 0, Math.PI * 2);
-		ctx.fill();
-		ctx.beginPath();
-		ctx.ellipse(360, 560, 95, 130, 0, 0, Math.PI * 2);
-		ctx.fill();
-		ctx.strokeStyle = "#f4f1ea";
+			[500, 175, 20],
+			[570, 150, 95],
+		])
+			for (const s of [-1, 1])
+				sketch(
+					ctx,
+					[
+						[360, y],
+						[360 + s * dx * 0.7, y + dy * 0.4],
+						[360 + s * dx, y + dy],
+						[360 + s * dx * 1.1, y + dy + 30],
+					],
+					r,
+					5,
+				);
+		for (const s of [-1, 1])
+			sketch(
+				ctx,
+				[
+					[360 + s * 30, 320],
+					[360 + s * 105, 255],
+					[360 + s * 95, 190],
+					[360 + s * 30, 150],
+					[360 + s * 10, 165],
+				],
+				r,
+				9,
+			);
+		// body
+		const body = new Path2D();
+		body.ellipse(360, 340, 75, 45, 0, 0, Math.PI * 2);
+		body.moveTo(445, 420);
+		body.ellipse(360, 420, 85, 45, 0, 0, Math.PI * 2);
+		body.moveTo(455, 560);
+		body.ellipse(360, 560, 95, 130, 0, 0, Math.PI * 2);
+		blocks(ctx, body, [265, 295, 190, 400], INKS, r, 170, 50);
+		// sheen on the wing case
+		blocks(
+			ctx,
+			poly([
+				[300, 470],
+				[340, 450],
+				[345, 640],
+				[305, 600],
+			]),
+			[300, 450, 45, 190],
+			["#4a5850", "#7f8f84", "#a9b6ad"],
+			r,
+			25,
+			30,
+		);
+		ctx.strokeStyle = PAPER;
 		ctx.lineWidth = 3;
 		ctx.beginPath();
 		ctx.moveTo(360, 440);
 		ctx.lineTo(360, 685);
 		ctx.stroke();
+		sketch(
+			ctx,
+			[
+				[265, 560],
+				[270, 470],
+				[300, 420],
+				[360, 400],
+				[430, 420],
+				[460, 500],
+				[455, 620],
+				[400, 700],
+				[330, 705],
+			],
+			r,
+			2,
+		);
+		// one red accent, like the reference's ring
+		ctx.fillStyle = "#c23b2b";
+		ctx.fillRect(470, 760, 70, 26);
 		// title
-		ctx.fillStyle = C.black;
+		ctx.fillStyle = "#1c1c1c";
 		ctx.textAlign = "center";
 		ctx.font = "700 46px Helvetica, Arial, sans-serif";
 		ctx.letterSpacing = "14px";
@@ -159,30 +421,92 @@ function beetlePoster() {
 	});
 }
 
-function comicCover(bg: string, title: string) {
+// Comic covers in the poster style: a block-painted colour field, an ink-block figure sketched in pencil, title on paper.
+function comicCover(colours: string[], title: string, seed: number) {
 	return canvasTexture(256, 360, (ctx) => {
-		ctx.fillStyle = bg;
-		ctx.fillRect(0, 0, 256, 360);
-		halftone(ctx, 256, 360, "rgba(0,0,0,0.3)", 8, 2);
-		ctx.fillStyle = C.paper;
+		const r = rng(seed);
+		blocks(
+			ctx,
+			poly([
+				[0, 0],
+				[256, 0],
+				[256, 360],
+				[0, 360],
+			]),
+			[0, 0, 256, 360],
+			colours,
+			r,
+			90,
+			50,
+		);
+		// figure: head and shoulders
+		const figure = new Path2D();
+		figure.ellipse(128, 200, 48, 58, 0, 0, Math.PI * 2);
+		figure.moveTo(40, 360);
+		figure.quadraticCurveTo(60, 270, 128, 262);
+		figure.quadraticCurveTo(196, 270, 216, 360);
+		blocks(ctx, figure, [40, 142, 176, 218], INKS, r, 70, 34);
+		sketch(
+			ctx,
+			[
+				[86, 230],
+				[78, 180],
+				[100, 145],
+				[140, 138],
+				[176, 170],
+				[178, 225],
+			],
+			r,
+			2.5,
+		);
+		sketch(
+			ctx,
+			[
+				[30, 355],
+				[55, 285],
+				[120, 260],
+			],
+			r,
+			2,
+		);
+		sketch(
+			ctx,
+			[
+				[226, 355],
+				[205, 285],
+				[140, 262],
+			],
+			r,
+			2,
+		);
+		// title band
+		ctx.fillStyle = PAPER;
 		ctx.fillRect(0, 0, 256, 80);
-		ctx.fillStyle = C.black;
+		sketch(
+			ctx,
+			[
+				[-10, 82],
+				[128, 78],
+				[266, 84],
+			],
+			r,
+			2,
+			1,
+		);
+		ctx.fillStyle = "#1c1c1c";
 		ctx.font = "900 58px Impact, sans-serif";
 		ctx.textAlign = "center";
 		ctx.fillText(title, 128, 62);
-		ctx.beginPath();
-		ctx.arc(128, 220, 70, 0, Math.PI * 2);
-		ctx.fill();
 	});
 }
 
 const ART: Record<string, () => CanvasTexture> = {
 	Poster_Doom: doomPoster,
 	Poster_Beetle: beetlePoster,
-	Comic_0: () => comicCover("#c23b2b", "ZAP!"),
-	Comic_1: () => comicCover("#d9a441", "ACE"),
-	Comic_2: () => comicCover("#3f6b5c", "VOID"),
-	Comic_3: () => comicCover("#6d6a62", "NOVA"),
+	Comic_0: () => comicCover(["#c23b2b", "#d9463a", "#8e2620", "#e0604a"], "ZAP!", 3),
+	Comic_1: () => comicCover(["#d9a441", "#e8bd5f", "#b8842e", "#f0d08a"], "ACE", 5),
+	Comic_2: () => comicCover(["#3f6b5c", "#55836f", "#2c5044", "#6f9a86"], "VOID", 9),
+	Comic_3: () => comicCover(["#6d6a62", "#858278", "#55524b", "#a09c90"], "NOVA", 13),
 };
 
 export function Room() {
