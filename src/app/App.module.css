@@ -1,15 +1,37 @@
+/* drei <Html occlude="blending"> lifts the canvas to z-index ~8.4M; anything drawn over the scene must sit above it. */
 .container {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
+	position: fixed;
+	inset: 0;
 }
 
 .loader {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	position: fixed;
+	inset: 0;
+	z-index: 2147483000;
+	display: grid;
+	place-items: center;
 	pointer-events: none;
+	color: #efe8d6;
+	font:
+		500 0.8125rem / 1 ui-monospace,
+		"SF Mono",
+		Menlo,
+		monospace;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.visuallyHidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+:global(::selection) {
+	background: #c23b2b;
+	color: #efe8d6;
 }

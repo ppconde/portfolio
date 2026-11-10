@@ -5,5 +5,5 @@ import styles from "./App.module.css";
 // root that gets unmounted mid-commit when the model resolves, which throws "removeChild ... not a child of this node".
 export function Loader() {
 	const { active, progress } = useProgress();
-	return active ? <div className={styles.loader}>{Math.round(progress)} % loaded</div> : null;
+	return active ? <div className={styles.loader}>Loading the room · {Math.round(progress)}%</div> : null;
 }
