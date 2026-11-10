@@ -23,11 +23,11 @@ type GLTFResult = GLTF & { nodes: Record<(typeof MESHES)[number], Mesh> };
 const MODEL_URL = "/models/pc.glb";
 
 // Cel shading: three light bands (shadow, mid, lit). DataTexture defaults to nearest filtering, so the bands stay hard.
-const toonRamp = new DataTexture(new Uint8Array([110, 185, 255]), 3, 1, RedFormat);
+export const toonRamp = new DataTexture(new Uint8Array([110, 185, 255]), 3, 1, RedFormat);
 toonRamp.needsUpdate = true;
 
 // Ink lines. In drei 10's non-screenspace mode `thickness` is in pixels, so the line width stays constant at any zoom.
-const INK = { color: "#1c1c1c", thickness: 2.5 };
+export const INK = { color: "#1c1c1c", thickness: 2.5 };
 // Inner fold lines: edges sharper than this many degrees. The Blender bevels split each 90° edge into ~30° steps.
 const FOLD_ANGLE = 25;
 
@@ -79,7 +79,7 @@ float scratches(vec2 uv) {
 }
 `;
 
-function addGrain(material: MeshToonMaterial) {
+export function addGrain(material: MeshToonMaterial) {
 	material.onBeforeCompile = (shader) => {
 		shader.vertexShader = shader.vertexShader
 			.replace("#include <common>", "#include <common>\nvarying vec3 vObjPos;\nvarying vec3 vObjNormal;")
