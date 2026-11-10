@@ -4,9 +4,11 @@ import { CanvasTexture, type Mesh, type MeshStandardMaterial, MeshToonMaterial, 
 import { addGrain, INK, toonRamp } from "./Computer";
 
 // The desk corner around the PC, built by ~/Documents/models/room/build_room.py: one mesh per material, transforms
-// already applied (desk top at y = 0). Poster_* and Comic_* keep 0-1 UVs; their art is drawn below on canvases.
-// Served by this app's own worker (src/worker/index.ts) from R2, like pc.glb.
-const MODEL_URL = "/models/room.glb";
+// already applied (desk top at y = 0). Poster_*, Comic_*, VHS_* and TVScreen keep 0-1 UVs; their art is drawn below on
+// canvases.
+// Served by this app's own worker (src/worker/index.ts) from R2, like pc.glb. The worker caches models as immutable,
+// so a rebuilt room.glb is uploaded under a new name (room-2.glb, room-3.glb, ...) and this URL bumped.
+const MODEL_URL = "/models/room-2.glb";
 
 function canvasTexture(w: number, h: number, draw: (ctx: CanvasRenderingContext2D) => void) {
 	const canvas = document.createElement("canvas");
@@ -500,7 +502,85 @@ function comicCover(colours: string[], title: string, seed: number) {
 	});
 }
 
+// VHS spines after the reference flyer: black cases with a cream label hand-lettered in red marker, or a printed
+// brand spine with colour stripes.
+type Spine = { kind: "label"; text: string } | { kind: "stripes"; text: string; stripes: string[]; light: boolean };
+
+function vhsSpine(spine: Spine, seed: number) {
+	return canvasTexture(1024, 120, (ctx) => {
+		const r = rng(seed);
+		ctx.fillStyle = "#151515";
+		ctx.fillRect(0, 0, 1024, 120);
+		ctx.textBaseline = "middle";
+		if (spine.kind === "label") {
+			const x = 140 + r() * 80;
+			ctx.fillStyle = "#ece2c6";
+			ctx.fillRect(x, 14, 680, 92);
+			sketch(
+				ctx,
+				[
+					[x, 14],
+					[x + 680, 14],
+					[x + 680, 106],
+					[x, 106],
+					[x, 14],
+				],
+				r,
+				2,
+				1,
+			);
+			ctx.fillStyle = "#c23b2b";
+			ctx.font = "700 56px 'Marker Felt', 'Comic Sans MS', cursive";
+			ctx.textAlign = "center";
+			ctx.fillText(spine.text, x + 340, 62);
+			ctx.fillStyle = "#1c1c1c";
+			ctx.font = "700 18px Helvetica, Arial, sans-serif";
+			ctx.fillText("T-120", x + 640, 40);
+		} else {
+			if (spine.light) {
+				ctx.fillStyle = "#ece2c6";
+				ctx.fillRect(0, 0, 1024, 120);
+			}
+			spine.stripes.forEach((colour, i) => {
+				ctx.fillStyle = colour;
+				ctx.fillRect(560 + i * 80, 0, 80, 120);
+			});
+			ctx.fillStyle = spine.light ? "#1c1c1c" : "#ece2c6";
+			ctx.font = "800 54px Helvetica, Arial, sans-serif";
+			ctx.textAlign = "left";
+			ctx.fillText(spine.text, 70, 62);
+			ctx.font = "700 18px Helvetica, Arial, sans-serif";
+			ctx.fillText("VHS", 900, 62);
+		}
+	});
+}
+
+// VCR blue screen with the on-screen "PLAY" display and faint scanlines; also used as the screen's glow.
+function tvScreen() {
+	return canvasTexture(512, 370, (ctx) => {
+		ctx.fillStyle = "#1d3a8a";
+		ctx.fillRect(0, 0, 512, 370);
+		ctx.fillStyle = "rgba(0,0,0,0.18)";
+		for (let y = 0; y < 370; y += 4) ctx.fillRect(0, y, 512, 2);
+		ctx.fillStyle = "#e8eefc";
+		ctx.font = "700 46px 'Courier New', monospace";
+		ctx.textBaseline = "top";
+		ctx.fillText("PLAY ▶", 40, 40);
+		ctx.fillText("0:12:47", 280, 290);
+	});
+}
+
+const RAINBOW = ["#7b4f9e", "#d9466f", "#ec7a3a", "#f0c040"];
+
 const ART: Record<string, () => CanvasTexture> = {
+	TVScreen: tvScreen,
+	VHS_0: () => vhsSpine({ kind: "label", text: "Live Music" }, 31),
+	VHS_1: () => vhsSpine({ kind: "stripes", text: "Rewind 80", stripes: RAINBOW, light: true }, 32),
+	VHS_2: () => vhsSpine({ kind: "label", text: "Red Rocks" }, 33),
+	VHS_3: () =>
+		vhsSpine({ kind: "stripes", text: "RETRO", stripes: ["#4fb3c8", "#3f9a6a", "#c23b2b"], light: false }, 34),
+	VHS_4: () => vhsSpine({ kind: "label", text: "Do not tape over!" }, 35),
+	VHS_5: () => vhsSpine({ kind: "label", text: "Summer '94" }, 36),
 	Poster_Doom: doomPoster,
 	Poster_Beetle: beetlePoster,
 	Comic_0: () => comicCover(["#c23b2b", "#d9463a", "#8e2620", "#e0604a"], "ZAP!", 3),
@@ -525,6 +605,7 @@ export function Room() {
 					color: map ? "#ffffff" : source.color,
 					map,
 					emissive: source.emissive,
+					emissiveMap: mesh.name === "TVScreen" ? map : null,
 					emissiveIntensity: source.emissiveIntensity,
 					gradientMap: toonRamp,
 				}),

@@ -84,6 +84,8 @@ export function Experience({ zoom: { zoomed, setPinned, setOverScreen, setOverPc
 			</Suspense>
 			{/* desk lamp bulb, from room.glb */}
 			<pointLight position={[-0.47, 0.37, -0.35]} color="#ffb35a" intensity={1.5} distance={1.2} decay={1.6} />
+			{/* blue spill from the little TV in the corner, from room.glb */}
+			<pointLight position={[-0.88, 0.17, -0.05]} color="#5d7cff" intensity={0.5} distance={0.5} decay={1.6} />
 			<group position={PC_POS}>
 				{/* biome-ignore lint/a11y/noStaticElementInteractions: a three.js group, not DOM; keyboard users zoom by tabbing into the screen */}
 				<group
