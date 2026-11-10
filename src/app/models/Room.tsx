@@ -603,7 +603,7 @@ export function Room() {
 			const material = addGrain(
 				new MeshToonMaterial({
 					color: map ? "#ffffff" : source.color,
-					map,
+					map: map ?? null,
 					emissive: source.emissive,
 					emissiveMap: mesh.name === "TVScreen" ? map : null,
 					emissiveIntensity: source.emissiveIntensity,

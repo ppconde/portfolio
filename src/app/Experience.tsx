@@ -74,6 +74,13 @@ export function Experience({ zoom: { zoomed, setPinned, setOverScreen, setOverPc
 				intensity={0.18}
 				shadow-normalBias={0.04}
 				shadow-mapSize={[2048, 2048]}
+				// fit the shadow camera to the desk corner (~2.5 m) instead of three's default 10 m box
+				shadow-camera-left={-1.6}
+				shadow-camera-right={1.6}
+				shadow-camera-top={1.6}
+				shadow-camera-bottom={-1.6}
+				shadow-camera-near={0.5}
+				shadow-camera-far={6}
 			/>
 			{/* screen glow, cyan-green like the lit shop window in the reference */}
 			<pointLight position={[0, 0.22, 0.35]} color="#9df5d6" intensity={0.65} distance={1.1} decay={1.6} />
