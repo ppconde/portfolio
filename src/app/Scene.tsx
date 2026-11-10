@@ -13,7 +13,7 @@ export function Scene({ zoom }: { zoom: Zoom }) {
 	return (
 		<>
 			{/* a click or tap that hits nothing interactive (the room around the PC) zooms back out */}
-			<Canvas camera={CAMERA} gl={GL} shadows onPointerMissed={zoom.leave}>
+			<Canvas camera={CAMERA} gl={GL} shadows="percentage" onPointerMissed={zoom.leave}>
 				<Experience zoom={zoom} />
 			</Canvas>
 			<Loader />

@@ -74,6 +74,13 @@ export function Experience({ zoom: { zoomed, setPinned, setOverScreen, setOverPc
 				intensity={0.18}
 				shadow-normalBias={0.04}
 				shadow-mapSize={[2048, 2048]}
+				// fit the shadow camera to the desk corner (~2.5 m) instead of three's default 10 m box
+				shadow-camera-left={-1.6}
+				shadow-camera-right={1.6}
+				shadow-camera-top={1.6}
+				shadow-camera-bottom={-1.6}
+				shadow-camera-near={0.5}
+				shadow-camera-far={6}
 			/>
 			{/* screen glow, cyan-green like the lit shop window in the reference */}
 			<pointLight position={[0, 0.22, 0.35]} color="#9df5d6" intensity={0.65} distance={1.1} decay={1.6} />
@@ -84,6 +91,8 @@ export function Experience({ zoom: { zoomed, setPinned, setOverScreen, setOverPc
 			</Suspense>
 			{/* desk lamp bulb, from room.glb */}
 			<pointLight position={[-0.47, 0.37, -0.35]} color="#ffb35a" intensity={1.5} distance={1.2} decay={1.6} />
+			{/* blue spill from the little TV in the corner, from room.glb */}
+			<pointLight position={[-0.88, 0.17, -0.05]} color="#5d7cff" intensity={0.5} distance={0.5} decay={1.6} />
 			<group position={PC_POS}>
 				{/* biome-ignore lint/a11y/noStaticElementInteractions: a three.js group, not DOM; keyboard users zoom by tabbing into the screen */}
 				<group
