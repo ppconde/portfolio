@@ -12,7 +12,7 @@ const PC_POS: [number, number, number] = [0, 0, -0.12];
 const SCREEN = new Vector3(0, 0.318, 0.108 - 0.12);
 
 const WIDE = { position: new Vector3(0.36, 0.6, 1.32), target: new Vector3(-0.08, 0.4, -0.25) };
-const FOG = [1.2, 3.2];
+const FOG = [1.2, 3.2] as const;
 
 // Profiler overlay, only fetched with ?perf in the URL.
 const Perf = lazy(() => import("r3f-perf").then((m) => ({ default: m.Perf })));
@@ -90,7 +90,7 @@ export function Experience({ zoom: { zoomed, setPinned, setOverScreen, setOverPc
 					onPointerOver={() => setOverPc(true)}
 					onPointerOut={() => setOverPc(false)}
 					// touch has no hover: a tap pins the zoom until a tap on the room or Escape
-					onClick={(event) => event.nativeEvent.pointerType !== "mouse" && setPinned(true)}
+					onClick={(event) => (event.nativeEvent as PointerEvent).pointerType !== "mouse" && setPinned(true)}
 				>
 					<Suspense fallback={null}>
 						<Computer />
