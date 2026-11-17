@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# The one gate. Agents run it locally, CI runs it on every PR. Same script for every harness.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+source ./check.conf
+
+fail=0
+err() { echo "FAIL: $*"; fail=1; }
+
+# 1. Spec traceability: every acceptance criterion in every spec is claimed by a test.
+# ponytail: greps for "<slug>/ACn" anywhere outside specs/. Proves a test claims the AC,
+# not that it verifies it (review covers that). Parse test reports instead if agents game it.
+for spec in specs/[!_]*.md; do
+  [ -e "$spec" ] || continue
+  slug=$(basename "$spec" .md)
+  for ac in $(grep -oE '^- \[.\] AC[0-9]+' "$spec" | grep -oE 'AC[0-9]+' || true); do
+    git grep --untracked -qFw "$slug/$ac" -- . ':!specs' ||
+      err "$spec: $ac has no test (put \"$slug/$ac\" in a test's name)"
+  done
+done
+
+# 2. Growth: total size is a budget. Raising MAX_LOC is a visible, reviewed line in check.conf.
+loc=$({ git grep --untracked -Ic '' -- . "${EXCLUDE[@]}" || true; } | awk -F: '{s+=$NF} END{print s+0}')
+[ "$loc" -le "$MAX_LOC" ] ||
+  err "codebase is $loc lines, budget is $MAX_LOC: delete something, or justify raising MAX_LOC"
+
+# 3. Reviewability: one branch adds at most MAX_DIFF lines.
+# ponytail: untracked files are not counted locally; CI sees them once committed.
+base=${BASE:-origin/main}
+if mb=$(git merge-base "$base" HEAD 2>/dev/null); then
+  added=$(git diff --numstat "$mb" -- . "${EXCLUDE[@]}" | awk '{s+=$1} END{print s+0}')
+  [ "$added" -le "$MAX_DIFF" ] ||
+    err "branch adds $added lines, limit is $MAX_DIFF: split the feature into smaller specs"
+
+  # Holdout: existing holdout tests are frozen. Changing one takes a PR that touches nothing else.
+  # ponytail: a holdout added on this branch is not frozen until merged, and agents can still
+  # read holdout/. Move holdouts to a separate repo that only CI checks out if that matters.
+  if [ -n "$(git diff --name-only --diff-filter=MDR "$mb" -- holdout)" ] &&
+    [ -n "$(git diff --name-only "$mb" -- . ':!holdout')" ]; then
+    err "branch changes existing holdout tests and other files: holdout changes go in their own PR"
+  fi
+else
+  added="?"
+  echo "skip diff budget: no $base to compare against"
+fi
+
+# 4. The app's own lint and tests.
+[ -n "$TEST_CMD" ] || err "TEST_CMD is empty: set it in check.conf"
+for cmd in "$LINT_CMD" "$TEST_CMD" "${HOLDOUT_CMD:-}"; do
+  [ -z "$cmd" ] || bash -c "$cmd" || err "$cmd"
+done
+
+echo "size: $loc/$MAX_LOC lines, branch: +$added/$MAX_DIFF"
+[ "$fail" = 0 ] && echo "check: OK"
+exit "$fail"
