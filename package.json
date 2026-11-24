@@ -24,8 +24,8 @@
 		"three": "^0.187.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.6.7",
-		"@cloudflare/vite-plugin": "^1.69.1",
+		"@biomejs/biome": "2.6.8",
+		"@cloudflare/vite-plugin": "^1.70.1",
 		"@types/node": "^26.6.6",
 		"@types/react": "^19.3.0",
 		"@types/react-dom": "^19.3.0",
@@ -33,7 +33,7 @@
 		"@vitejs/plugin-react": "^6.3.0",
 		"typescript": "^7.0.2",
 		"vite": "^8.3.8",
-		"wrangler": "^4.162.0"
+		"wrangler": "^4.166.0"
 	},
 	"packageManager": "pnpm@10.30.1"
 }
